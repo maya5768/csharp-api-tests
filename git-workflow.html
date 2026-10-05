@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>csharp-api-tests – שיטת העבודה עם Git</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-alt: #f5f6f8;
+    --text: #1b1f27;
+    --text-muted: #5a6270;
+    --accent: #4f46e5;
+    --accent-soft: #eef0ff;
+    --border: #e2e4ea;
+    --code-bg: #272c36;
+    --code-text: #e6e8ef;
+    --ok: #1a7f4c;
+    --warn: #9a6b00;
+    --warn-soft: #fff6e0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161b;
+      --bg-alt: #1b1e25;
+      --text: #e7e9ee;
+      --text-muted: #9aa1ad;
+      --accent: #8b85ff;
+      --accent-soft: #23223a;
+      --border: #2a2d36;
+      --code-bg: #0e1016;
+      --code-text: #d7dae2;
+      --ok: #4fd38a;
+      --warn: #e3b341;
+      --warn-soft: #2a2410;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", Arial, sans-serif;
+    line-height: 1.7;
+  }
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+  header { margin-bottom: 36px; }
+  header .badge {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  h1 { font-size: 30px; margin: 0 0 8px; }
+  header p.subtitle { color: var(--text-muted); font-size: 17px; margin: 0; }
+  h2 {
+    font-size: 21px;
+    margin: 44px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  h3 { font-size: 16px; margin: 24px 0 8px; }
+  p { color: var(--text); }
+  .muted { color: var(--text-muted); }
+  code {
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 2px 6px;
+    font-size: 13.5px;
+    font-family: Consolas, "Courier New", monospace;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+  pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    border-radius: 10px;
+    padding: 16px 18px;
+    overflow-x: auto;
+    direction: ltr;
+    text-align: left;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 14.5px;
+  }
+  th, td { border: 1px solid var(--border); padding: 9px 12px; text-align: right; }
+  th { background: var(--bg-alt); font-weight: 600; }
+  ul, ol { padding-right: 22px; margin: 10px 0; }
+  li { margin-bottom: 6px; }
+  .steps { counter-reset: step; list-style: none; padding-right: 0; }
+  .steps > li {
+    counter-increment: step;
+    position: relative;
+    padding-right: 44px;
+    margin-bottom: 20px;
+  }
+  .steps > li::before {
+    content: counter(step);
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .steps > li h4 { margin: 2px 0 4px; font-size: 15.5px; }
+  .steps > li p { margin: 0; color: var(--text-muted); font-size: 14.5px; }
+  .note {
+    background: var(--warn-soft);
+    border: 1px solid var(--warn);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 14px;
+    margin: 16px 0;
+  }
+  .note strong { color: var(--warn); }
+  figure.diagram {
+    margin: 16px 0;
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px 14px;
+  }
+  figure.diagram svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+  figure.diagram figcaption {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+  }
+  footer {
+    margin-top: 56px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="badge">Git Workflow</span>
+    <h1>שיטת העבודה עם Git בפרויקט</h1>
+    <p class="subtitle">Feature Branch + Pull Request + Squash Merge — ומה זה אומר בפועל כשעובדים לבד.</p>
+  </header>
+
+  <section>
+    <h2>למה בכלל תהליך מסודר, ולא פשוט push ל-main</h2>
+    <p>
+      אפשר לעבוד ישירות על <code>main</code> ולדחוף כל שינוי — זה עובד, אבל ההיסטוריה שמתקבלת היא
+      בלגן של commits כמו "fix", "wip", "עוד תיקון". מי שמגיע לריפו (בודק קוד, מראיין, או אני עצמי
+      בעוד חצי שנה) לא מבין מתוך ה-log מה קרה ולמה. תהליך מבוסס branch + Pull Request פותר את זה:
+      כל שינוי מתועד כיחידה שלמה והגיונית, עם כותרת ותיאור, לפני שהוא נכנס ל-main.
+    </p>
+  </section>
+
+  <section>
+    <h2>העיקרון: Feature Branch</h2>
+    <p>
+      כל יחידת עבודה — בדיקה חדשה, תיקון, שינוי מבנה — מתבצעת ב-branch נפרד שנוצר מתוך
+      <code>main</code>, ולא נכנסת ל-<code>main</code> ישירות. ה-branch נסגר (merge) רק כששיהיה
+      שהוא עובד ונבדק.
+    </p>
+    <figure class="diagram" dir="ltr">
+      <svg viewBox="0 0 720 190" role="img" aria-label="main מתקדם ישר קדימה; test/get-post-returns-ok נפתח ממנו עם שלושה commits ביניים, וחוזר למיזוג כ-commit squash יחיד על main, ואז נמחק.">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+          </marker>
+        </defs>
+
+        <!-- main: segment before the branch point -->
+        <line x1="20" y1="46" x2="150" y2="46" stroke="currentColor" stroke-width="2"></line>
+        <circle cx="150" cy="46" r="5" fill="currentColor"></circle>
+        <text x="20" y="28" font-size="13" font-weight="600" fill="currentColor">main</text>
+
+        <!-- fork into the feature branch -->
+        <line x1="150" y1="46" x2="193" y2="128" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"></line>
+
+        <!-- feature branch line with its throwaway commits -->
+        <line x1="195" y1="130" x2="400" y2="130" stroke="currentColor" stroke-width="1.5"></line>
+        <text x="195" y="116" font-size="11.5" font-family="Consolas, 'Courier New', monospace" fill="currentColor">test/get-post-returns-ok</text>
+        <circle cx="245" cy="130" r="4" fill="currentColor" opacity=".45"></circle>
+        <circle cx="300" cy="130" r="4" fill="currentColor" opacity=".45"></circle>
+        <circle cx="355" cy="130" r="4" fill="currentColor" opacity=".45"></circle>
+        <text x="300" y="152" font-size="11" text-anchor="middle" fill="currentColor" opacity=".65">commits ביניים — יימחקו ב-squash</text>
+
+        <!-- branch deleted after merge -->
+        <line x1="400" y1="130" x2="400" y2="158" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3" opacity=".5"></line>
+        <text x="400" y="172" font-size="11" text-anchor="middle" fill="currentColor" opacity=".6">branch נמחק</text>
+
+        <!-- merge back into main as one clean commit -->
+        <line x1="400" y1="130" x2="443" y2="48" stroke="currentColor" stroke-width="1.5" marker-end="url(#arrow)"></line>
+        <text x="445" y="24" font-size="12" font-weight="600" text-anchor="middle" fill="var(--accent)">Squash merge</text>
+        <circle cx="445" cy="46" r="6.5" fill="var(--accent)"></circle>
+        <text x="445" y="68" font-size="11" text-anchor="middle" fill="currentColor" opacity=".7">commit אחד נקי</text>
+
+        <!-- main: segment after the merge, continuing forward -->
+        <line x1="445" y1="46" x2="690" y2="46" stroke="currentColor" stroke-width="2" marker-end="url(#arrow)"></line>
+      </svg>
+      <figcaption>Feature branch נפתח מתוך main, צובר commits ביניים לא חשובים, וחוזר כ-commit squash יחיד ונקי — ואז נמחק.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>מוסכמת שמות ל-branches</h2>
+    <table>
+      <tr><th>קידומת</th><th>מתי משתמשים</th></tr>
+      <tr><td><code>test/...</code></td><td>הוספת בדיקה אוטומטית חדשה — למשל <code>test/get-post-returns-ok</code></td></tr>
+      <tr><td><code>feature/...</code></td><td>פיצ'ר חדש / הרחבת תשתית הבדיקות</td></tr>
+      <tr><td><code>fix/...</code></td><td>תיקון באג או בדיקה שבורה</td></tr>
+      <tr><td><code>docs/...</code></td><td>עדכון תיעוד בלבד (README וכד')</td></tr>
+    </table>
+    <p class="muted">השם עצמו צריך לתאר <em>מה</em> נעשה, כדי שאפשר יהיה להבין את התוכן בלי לפתוח קוד.</p>
+  </section>
+
+  <section>
+    <h2>התהליך צעד-אחר-צעד</h2>
+    <ol class="steps">
+      <li>
+        <h4>פתיחת branch מתוך main</h4>
+        <p><code>git checkout -b test/get-post-returns-ok</code> — נקודת ההתחלה תמיד main עדכני.</p>
+      </li>
+      <li>
+        <h4>עבודה ו-commits על ה-branch</h4>
+        <p>אפשר לעשות כמה commits קטנים תוך כדי העבודה (גם "commits ביניים") — זה לא משנה את main בכלל, וה-squash בסוף ינקה אותם.</p>
+      </li>
+      <li>
+        <h4>דחיפת ה-branch ל-GitHub</h4>
+        <p><code>git push -u origin test/get-post-returns-ok</code></p>
+      </li>
+      <li>
+        <h4>פתיחת Pull Request</h4>
+        <p>מ-branch אל main, עם כותרת קצרה ותיאור: מה נוסף/שונה ולמה. ה-PR הוא גם תיעוד לעתיד.</p>
+      </li>
+      <li>
+        <h4>Self-review</h4>
+        <p>בפרויקט סולו אין מי שיאשר עבורך — אז את עוברת בעצמך על ה-diff בתצוגת ה-PR (לא בעורך). רואים משם דברים שקל לפספס תוך כדי כתיבה.</p>
+      </li>
+      <li>
+        <h4>Squash and Merge</h4>
+        <p>GitHub דוחס את כל ה-commits מה-branch ל-commit אחד נקי על main, עם ההודעה שתכתבי (אפשר לערוך אותה לפני האישור הסופי).</p>
+      </li>
+      <li>
+        <h4>Delete branch</h4>
+        <p>אחרי המיזוג, מוחקים את ה-branch (GitHub מציע את זה בכפתור אחד) — הוא כבר מוזג לתוך main.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>מה זה בעצם Squash Merge?</h2>
+    <p>
+      זו אפשרות מיזוג ב-GitHub (ובפקודת git רגילה: <code>git merge --squash</code>) שלוקחת את
+      <em>כל</em> ה-commits שנצברו ב-branch, ודוחסת אותם ל-<strong>commit יחיד</strong> שנכנס
+      ל-main — בלי לשמור את ההיסטוריה הפנימית של ה-branch. זה בדיוק מה שקורה בשלב 6 ברשימה שלמעלה.
+    </p>
+
+    <h3>לפני ואחרי</h3>
+    <p class="muted">נניח שעבדת על <code>test/get-post-returns-ok</code> ויצרת שם 4 commits תוך כדי העבודה:</p>
+    <pre>a1b2c3d  wip: מתחיל לכתוב את הבדיקה
+e4f5g6h  fix typo
+i7j8k9l  מוסיף עוד assert
+m0n1o2p  cleanup</pre>
+    <p class="muted">עם Squash merge, ב-main זה נכנס כ-commit יחיד, עם ההודעה שאת כותבת (או עורכת) בזמן המיזוג:</p>
+    <pre>q1r2s3t  Add GetPost_ReturnsOk test</pre>
+    <p>ה-4 commits המקוריים "נעלמים" מ-main — הם עדיין קיימים ב-branch, עד שהוא נמחק בשלב הבא.</p>
+
+    <h3>שלוש אפשרויות מיזוג ב-GitHub</h3>
+    <table>
+      <tr><th>אפשרות</th><th>מה קורה ל-main</th></tr>
+      <tr><td>Merge commit</td><td>שומר את כל ה-commits כפי שהם, ומוסיף גם commit מיזוג נפרד — ה-log מתמלא ב"רעש" של ניסוי וטעייה</td></tr>
+      <tr><td>Rebase and merge</td><td>שומר את כל ה-commits המקוריים (לא דוחס), רק מעתיק אותם לקצה main בלי commit מיזוג נוסף</td></tr>
+      <tr><td>Squash and merge</td><td>דוחס הכל ל-commit אחד נקי — האפשרות שנבחרה לפרויקט הזה</td></tr>
+    </table>
+    <p class="muted">
+      הבחירה ב-Squash נותנת את ההיסטוריה הכי נקייה ב-main: commit אחד = feature אחד שלם ועובד,
+      בדיוק מה שמי שסוקר את ה-log (כולל מראיין) רוצה לראות — בלי "wip" ו-"fix typo" באמצע.
+    </p>
+  </section>
+
+  <section>
+    <h2>מה עם אישור PR בפרויקט סולו?</h2>
+    <div class="note">
+      <strong>אין Reviewer חיצוני — וזה בסדר.</strong>
+      את ממלאת את שני התפקידים: פותחת את ה-PR <em>וגם</em> מאשרת/ממזגת אותו בעצמך.
+      לא מגדירים ב-GitHub דרישת אישור חובה (branch protection), כי כבעלת הריפו היחידה
+      לא תוכלי לאשר את ה-PR של עצמך — זה פשוט ייתקע.
+    </div>
+    <p>
+      מה שכן שווה את זה: תהליך ה-PR מכריח סקירה עצמית לפני מיזוג, ומראה בריאיון שאת מכירה את
+      שיטת העבודה הצוותית המקובלת — גם כשעובדים לבד. תוספת שמחליפה חלק מתפקיד ה-reviewer:
+      הרצת <code>dotnet test</code> אוטומטית על כל PR באמצעות GitHub Actions, כך שה-PR "ירוק"
+      רק אם הבדיקות עוברות.
+    </p>
+  </section>
+
+  <section>
+    <h2>דוגמה מהפרויקט הזה</h2>
+    <p class="muted">כך יושם התהליך בפועל, צעד אחר צעד:</p>
+    <table>
+      <tr><th>שלב</th><th>מה נעשה</th></tr>
+      <tr><td>1</td><td>Commit ראשון על <code>main</code>: scaffolding בלבד — <code>.csproj</code>, <code>.gitignore</code>, <code>README.md</code>, <code>README.html</code></td></tr>
+      <tr><td>2</td><td>נפתח branch בשם <code>test/get-post-returns-ok</code></td></tr>
+      <tr><td>3</td><td>נוסף אליו <code>PostApiTests.cs</code> עם הבדיקה <code>GetPost_ReturnsOk</code></td></tr>
+      <tr><td>4</td><td>ה-branch נדחף ל-GitHub ונפתח עליו Pull Request</td></tr>
+      <tr><td>5</td><td>Self-review על ה-diff, ואז Squash and Merge לתוך main</td></tr>
+    </table>
+    <p>כל בדיקה חדשה שתתווסף בהמשך (למשל בדיקות שליליות, אימות JSON Schema) תעבור באותו תהליך בדיוק — branch משלה, PR משלה.</p>
+  </section>
+
+  <footer>
+    נכתב ומתוחזק על ידי Maya · תיעוד שיטת העבודה עם Git בפרויקט csharp-api-tests.
+  </footer>
+
+</div>
+</body>
+</html>
