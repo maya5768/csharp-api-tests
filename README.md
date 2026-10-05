@@ -30,4 +30,5 @@ ApiTests/
 
 ## תיעוד מורחב
 
-להסבר מפורט על אסטרטגיית הבדיקות, מבנה הפרויקט ותוכנית הפיתוח — ראו [README.html](README.html).
+- להסבר מפורט על אסטרטגיית הבדיקות, מבנה הפרויקט ותוכנית הפיתוח — ראו [מסמך תכנון בדיקות](<ApiTests – מסמך תכנון בדיקות.html>).
+- לתיעוד שיטת העבודה עם Git (branching, Pull Requests, Squash merge) — ראו [git-workflow.html](git-workflow.html).
