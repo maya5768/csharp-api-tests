@@ -71,4 +71,23 @@ public class PostApiTests : IClassFixture<ApiClientFixture>
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, error => error.Contains("title"));
     }
+
+    [Fact]
+    public async Task CreatePost_ReturnsCreated()
+    {
+        // Arrange
+        CreatePostRequest request = PostTestData.NewValidPost();
+
+        // Act
+        HttpResponseMessage response = await _postsClient.CreatePostAsync(request);
+        Post? created = await response.Content.ReadFromJsonAsync<Post>();
+
+        // Assert
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        Assert.NotNull(created);
+        Assert.Equal(request.Title, created.Title);
+        Assert.Equal(request.Body, created.Body);
+        Assert.Equal(request.UserId, created.UserId);
+        Assert.True(created.Id > 0);
+    }
 }
