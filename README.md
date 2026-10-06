@@ -12,12 +12,13 @@
 - .NET 10
 - xUnit
 - HttpClient
-- JsonSchema.Net (לבדיקות סכמת JSON עתידיות)
+- JsonSchema.Net (אימות תשובות מול JSON Schema)
+- GitHub Actions (CI)
 
 ## הרצת הבדיקות
 
 ```
-dotnet test
+dotnet test ApiTests
 ```
 
 הבדיקות רצות גם אוטומטית ב-GitHub Actions, בכל Pull Request ובכל push ל-`main` (`.github/workflows/tests.yml`).
@@ -52,5 +53,6 @@ ApiTests/
 
 ## תיעוד מורחב
 
-- להסבר מפורט על אסטרטגיית הבדיקות, מבנה הפרויקט ותוכנית הפיתוח — ראו [מסמך תכנון בדיקות](<ApiTests – מסמך תכנון בדיקות.html>).
+- המסמך הנוכחי: אסטרטגיית הבדיקות, ארכיטקטורת הקוד, תיעוד המחלקות, ששת מקרי הבדיקה עם הקוד שלהם, ומפת הדרכים שמומשה — ראו [מסמך תכנון בדיקות, גרסה 2](<ApiTests – מסמך תכנון בדיקות-VER2.html>).
+- התכנון המקורי, לפני המימוש — ראו [מסמך תכנון בדיקות, גרסה 1](<ApiTests – מסמך תכנון בדיקות.html>).
 - לתיעוד שיטת העבודה עם Git (branching, Pull Requests, Squash merge) — ראו [git-workflow.html](git-workflow.html).
