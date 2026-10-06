@@ -20,6 +20,8 @@
 dotnet test
 ```
 
+הבדיקות רצות גם אוטומטית ב-GitHub Actions, בכל Pull Request ובכל push ל-`main` (`.github/workflows/tests.yml`).
+
 ## מבנה הפרויקט
 
 ```
