@@ -319,7 +319,8 @@ m0n1o2p  cleanup</pre>
       מה שכן שווה את זה: תהליך ה-PR מכריח סקירה עצמית לפני מיזוג, ומראה בריאיון שאת מכירה את
       שיטת העבודה הצוותית המקובלת — גם כשעובדים לבד. תוספת שמחליפה חלק מתפקיד ה-reviewer:
       הרצת <code>dotnet test</code> אוטומטית על כל PR באמצעות GitHub Actions, כך שה-PR "ירוק"
-      רק אם הבדיקות עוברות.
+      רק אם הבדיקות עוברות. זה פועל בפרויקט מאז PR #8 (<code>.github/workflows/tests.yml</code>):
+      בכל PR מופיעה הבדיקה <code>tests</code> עם ✅ או ❌, ובודקים אותה לפני Squash and Merge.
     </p>
   </section>
 
@@ -334,7 +335,7 @@ m0n1o2p  cleanup</pre>
       <tr><td>4</td><td>ה-branch נדחף ל-GitHub ונפתח עליו Pull Request</td></tr>
       <tr><td>5</td><td>Self-review על ה-diff, ואז Squash and Merge לתוך main</td></tr>
     </table>
-    <p>כל בדיקה חדשה שתתווסף בהמשך (למשל בדיקות שליליות, אימות JSON Schema) תעבור באותו תהליך בדיוק — branch משלה, PR משלה.</p>
+    <p>כל השינויים שבאו אחר כך עברו באותו תהליך בדיוק — branch משלהם, PR משלהם: התשתית (<code>feature/test-architecture</code>, PR #4), הבדיקות TC-02 עד TC-06 (PR #5, #6, #7, #9), ה-CI (<code>feature/github-actions-ci</code>, PR #8) ועדכוני התיעוד (<code>docs/...</code>, PR #3).</p>
   </section>
 
   <footer>
