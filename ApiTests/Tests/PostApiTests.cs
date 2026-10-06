@@ -90,4 +90,14 @@ public class PostApiTests : IClassFixture<ApiClientFixture>
         Assert.Equal(request.UserId, created.UserId);
         Assert.True(created.Id > 0);
     }
+
+    [Fact]
+    public async Task GetNonExistingPost_ReturnsNotFound()
+    {
+        // Act
+        HttpResponseMessage response = await _postsClient.GetPostByIdAsync(PostTestData.NonExistingPostId);
+
+        // Assert
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
 }
