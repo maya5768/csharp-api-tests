@@ -9,4 +9,7 @@ public static class PostTestData
 
     public static CreatePostRequest NewValidPost() =>
         new(UserId: 1, Title: "Test title", Body: "Test body");
+
+    public static string PostJsonMissingTitle() =>
+        """ { "userId": 1, "id": 1, "body": "Sample body" } """;
 }

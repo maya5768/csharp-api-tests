@@ -35,8 +35,13 @@ ApiTests/
 │   └── PostsApiClient.cs       # /posts actions
 ├── Fixtures/
 │   └── ApiClientFixture.cs     # one shared HttpClient per test class
+├── Validation/
+│   ├── JsonSchemaValidator.cs  # wraps JsonSchema.Net
+│   └── SchemaValidationResult.cs # library-free result
 ├── TestData/
 │   └── PostTestData.cs         # named test input
+├── Schemas/
+│   └── post.schema.json        # JSON Schema contract for a post
 └── Tests/
     └── PostApiTests.cs         # test class
 ```
