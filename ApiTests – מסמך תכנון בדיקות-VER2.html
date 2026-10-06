@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ApiTests – מסמך תכנון בדיקות</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F6FA; --surface:#FFFFFF; --ink:#17213A; --muted:#58627A; --line:#D8DEE9; --soft:#F8F9FC;
+  --dotnet:#512BD4; --dotnet-soft:#EEE9FD; --dotnet-ink:#3B1F9E;
+  --pass:#1F7A4A; --pass-soft:#E2F3E9;
+  --plan:#5B6578; --plan-soft:#ECEFF4;
+  --opt:#8A5A00; --opt-soft:#FBF0D6;
+  --neg:#B42318; --neg-soft:#FDECEA;
+  --get:#1F6FB2; --post:#1F7A4A;
+  --code-bg:#1D2134; --code-ink:#E6E9F2; --code-com:#8D97B5; --code-kw:#C3A6FF; --code-str:#9FD8A8; --code-type:#7FCBEF;
+  --sans:"IBM Plex Sans Hebrew","Segoe UI",Arial,sans-serif;
+  --mono:"IBM Plex Mono",Consolas,"Courier New",monospace;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12151F; --surface:#1A1F2D; --ink:#E6E9F2; --muted:#A2AABC; --line:#2C3346; --soft:#161B27;
+    --dotnet:#A28CFF; --dotnet-soft:#29224D; --dotnet-ink:#CBBEFF;
+    --pass:#5BC98C; --pass-soft:#163224; --plan:#A2AABC; --plan-soft:#242A39;
+    --opt:#F0B055; --opt-soft:#3A2C14; --neg:#FF8A80; --neg-soft:#3A1A18;
+    --get:#6CB6F2; --post:#5BC98C; --code-bg:#0D1018;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12151F; --surface:#1A1F2D; --ink:#E6E9F2; --muted:#A2AABC; --line:#2C3346; --soft:#161B27;
+  --dotnet:#A28CFF; --dotnet-soft:#29224D; --dotnet-ink:#CBBEFF;
+  --pass:#5BC98C; --pass-soft:#163224; --plan:#A2AABC; --plan-soft:#242A39;
+  --opt:#F0B055; --opt-soft:#3A2C14; --neg:#FF8A80; --neg-soft:#3A1A18;
+  --get:#6CB6F2; --post:#5BC98C; --code-bg:#0D1018;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 16px);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.75}
+a{color:var(--dotnet)}
+a:focus-visible,summary:focus-visible{outline:3px solid var(--dotnet);outline-offset:2px;border-radius:3px}
+
+.layout{max-width:1180px;margin:0 auto;padding:0 22px 90px;display:grid;grid-template-columns:240px minmax(0,1fr);gap:48px}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);align-self:start;padding-top:56px;font-size:15px}
+nav.toc p{font-weight:600;margin:0 0 8px}
+nav.toc ol{list-style:none;margin:0;padding:0;counter-reset:toc}
+nav.toc li{counter-increment:toc}
+nav.toc a{display:block;padding:5px 10px;border-inline-start:2px solid var(--line);color:var(--muted);text-decoration:none}
+nav.toc a::before{content:counter(toc) ". ";font-family:var(--mono);font-size:13px}
+nav.toc a:hover{color:var(--ink);border-color:var(--dotnet)}
+main{min-width:0;padding-top:56px}
+
+/* document header */
+.doc-head{background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--dotnet);border-radius:10px;padding:30px 32px 26px}
+.doc-type{color:var(--dotnet);font-weight:600;margin:0 0 4px;font-size:15px}
+h1{font-size:clamp(28px,4.4vw,40px);line-height:1.2;margin:0 0 14px;font-weight:700}
+.lede{font-size:18.5px;color:var(--muted);margin:0 0 22px;max-width:66ch}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px 22px;margin:0;padding-top:18px;border-top:1px solid var(--line)}
+.meta div{min-width:0}
+.meta dt{font-size:13px;color:var(--muted)}
+.meta dd{margin:0;font-weight:600;font-size:15.5px;overflow-wrap:anywhere}
+
+.summary-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-top:18px}
+.summary-strip div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 16px}
+.summary-strip b{display:block;font-size:26px;line-height:1.2;font-family:var(--mono);font-weight:600}
+.summary-strip span{font-size:14px;color:var(--muted)}
+
+section{margin-top:58px}
+h2{font-size:25px;margin:0 0 6px;font-weight:700;display:flex;gap:12px;align-items:baseline}
+h2 .n{font-family:var(--mono);color:var(--dotnet);font-size:18px;font-weight:500}
+.section-intro{color:var(--muted);margin:0 0 20px;max-width:68ch}
+h3{font-size:19px;margin:28px 0 8px;font-weight:600}
+p{margin:0 0 12px}
+ul.plain{margin:0 0 12px;padding-inline-start:22px}
+ul.plain li{margin-bottom:6px}
+
+code{font-family:var(--mono);font-size:.87em}
+:not(pre)>code{background:var(--dotnet-soft);color:var(--dotnet-ink);padding:1px 6px;border-radius:4px;direction:ltr;unicode-bidi:isolate;display:inline-block;line-height:1.5}
+pre{direction:ltr;text-align:left;background:var(--code-bg);color:var(--code-ink);padding:16px 18px;border-radius:8px;overflow-x:auto;margin:10px 0 16px;font-size:14px;line-height:1.6}
+pre code{color:inherit}
+pre .c{color:var(--code-com)} pre .k{color:var(--code-kw)} pre .s{color:var(--code-str)} pre .t{color:var(--code-type)}
+
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface);margin:10px 0 16px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{padding:11px 14px;text-align:right;vertical-align:top;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{font-weight:600;background:var(--soft);font-size:14px;color:var(--muted)}
+td.ltr,th.ltr{direction:ltr;text-align:left;font-family:var(--mono);font-size:13.5px;white-space:nowrap}
+.mx td.c{text-align:center;font-family:var(--mono);color:var(--dotnet);font-weight:600}
+
+/* approach levels */
+.levels{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.levels div{padding:16px 18px;border-inline-start:1px solid var(--line)}
+.levels div:first-child{border-inline-start:0}
+.levels b{display:block;color:var(--dotnet);font-size:15px;margin-bottom:4px}
+.levels p{margin:0;font-size:15px;color:var(--muted)}
+
+/* status pills */
+.st{font-size:13px;font-weight:600;padding:2px 10px;border-radius:999px;white-space:nowrap;display:inline-block;line-height:1.6}
+.st.done{background:var(--pass-soft);color:var(--pass)}
+.st.plan{background:var(--plan-soft);color:var(--plan)}
+.st.opt{background:var(--opt-soft);color:var(--opt)}
+.tag{font-size:13px;padding:2px 9px;border-radius:4px;background:var(--soft);border:1px solid var(--line);color:var(--muted);white-space:nowrap;display:inline-block;line-height:1.6}
+.tag.neg{background:var(--neg-soft);color:var(--neg);border-color:transparent}
+.tag.contract{background:var(--dotnet-soft);color:var(--dotnet-ink);border-color:transparent}
+
+/* test case cards */
+.tc{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin:18px 0;overflow:hidden}
+.tc-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:16px 20px;border-bottom:1px solid var(--line);background:var(--soft)}
+.tc-id{font-family:var(--mono);font-weight:600;color:var(--dotnet);font-size:15px}
+.tc-title{font-weight:600;font-size:18px;flex:1 1 260px;margin:0}
+.tc-method{font-family:var(--mono);font-size:13.5px;direction:ltr;color:var(--muted);width:100%}
+.tc-body{padding:6px 20px 18px}
+.tc dl{display:grid;grid-template-columns:150px minmax(0,1fr);gap:0;margin:0}
+.tc dt{font-weight:600;font-size:15px;padding:12px 0;border-bottom:1px solid var(--line);color:var(--muted)}
+.tc dd{margin:0;padding:12px 0;border-bottom:1px solid var(--line);font-size:16px;min-width:0}
+.tc dl > :nth-last-child(-n+2){border-bottom:0}
+.req{direction:ltr;display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:14px;background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:4px 10px;max-width:100%;overflow-x:auto}
+.verb{font-weight:600;font-size:12.5px;padding:1px 7px;border-radius:4px;color:#fff}
+.verb.get{background:var(--get)} .verb.post{background:var(--post)} .verb.local{background:var(--plan)}
+ol.steps{margin:0;padding-inline-start:20px}
+ol.steps li{margin-bottom:4px}
+.why{font-size:15px;color:var(--muted);background:var(--dotnet-soft);border-radius:6px;padding:10px 14px;margin-top:4px}
+.why b{color:var(--ink)}
+details.code{margin-top:6px}
+details.code summary{cursor:pointer;font-size:15px;font-weight:600;color:var(--dotnet)}
+
+/* schema table */
+.cards2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.box h3{margin:0 0 8px;font-size:17px}
+.box p,.box li{font-size:15.5px;color:var(--muted)}
+.box ul{margin:0;padding-inline-start:20px}
+.risk-level{font-size:13px;font-weight:600}
+.risk-level.h{color:var(--neg)} .risk-level.m{color:var(--opt)} .risk-level.l{color:var(--pass)}
+
+.flow{display:flex;flex-wrap:wrap;margin:12px 0 16px;counter-reset:fl}
+.flow div{flex:1 1 150px;background:var(--surface);border:1px solid var(--line);padding:14px 16px;font-size:15px;margin-inline-end:-1px;counter-increment:fl}
+.flow div::before{content:counter(fl);display:inline-flex;width:24px;height:24px;border-radius:50%;background:var(--dotnet);color:#fff;font-family:var(--mono);font-size:13px;align-items:center;justify-content:center;margin-bottom:6px}
+.flow div b{display:block}
+.flow div:first-child{border-radius:0 10px 10px 0}
+.flow div:last-child{border-radius:10px 0 0 10px}
+
+footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+
+@media (max-width:920px){
+  .layout{grid-template-columns:1fr;gap:0}
+  nav.toc{position:static;padding-top:28px}
+  nav.toc ol{display:flex;flex-wrap:wrap;gap:6px}
+  nav.toc a{border:1px solid var(--line);border-radius:6px;padding:3px 10px;background:var(--surface)}
+  main{padding-top:24px}
+}
+@media (max-width:560px){
+  body{font-size:16px}
+  .doc-head{padding:22px 18px}
+  .tc dl{grid-template-columns:1fr}
+  .tc dt{border-bottom:0;padding-bottom:0}
+  .flow div{flex-basis:100%;margin-inline-end:0;margin-bottom:-1px}
+  .flow div:first-child{border-radius:10px 10px 0 0}
+  .flow div:last-child{border-radius:0 0 10px 10px}
+  .levels div{border-inline-start:0;border-top:1px solid var(--line)}
+  .levels div:first-child{border-top:0}
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc" aria-label="תוכן המסמך">
+  <p>תוכן המסמך</p>
+  <ol>
+    <li><a href="#goal">מטרה והיקף</a></li>
+    <li><a href="#sut">המערכת הנבדקת</a></li>
+    <li><a href="#approach">גישת הבדיקות</a></li>
+    <li><a href="#architecture">ארכיטקטורת הקוד</a></li>
+    <li><a href="#classes">תיעוד המחלקות</a></li>
+    <li><a href="#env">סביבה וכלים</a></li>
+    <li><a href="#req">דרישות ועקיבות</a></li>
+    <li><a href="#cases">מקרי הבדיקה</a></li>
+    <li><a href="#schema">חוזה JSON Schema</a></li>
+    <li><a href="#data">נתוני בדיקה</a></li>
+    <li><a href="#risks">סיכונים ומגבלות</a></li>
+    <li><a href="#criteria">קריטריוני כניסה ויציאה</a></li>
+    <li><a href="#flow">תהליך עבודה ו-CI</a></li>
+    <li><a href="#run">מבנה והרצה</a></li>
+    <li><a href="#roadmap">מפת דרכים למימוש</a></li>
+    <li><a href="#next">הרחבות</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<header class="doc-head">
+  <p class="doc-type">מסמך תכנון בדיקות (Test Plan)</p>
+  <h1>ApiTests: אוטומציית REST API ב-<bdi dir="ltr">C#</bdi></h1>
+  <p class="lede">סוויטת בדיקות אוטומטיות ל-endpoint ‏<code>/posts</code> של JSONPlaceholder. המסמך מתאר מה נבדק, למה, באיזו שיטה, איך הקוד בנוי, ומה נחשב להצלחה.</p>
+  <dl class="meta">
+    <div><dt>מחברת</dt><dd>מיה דורני שוקרי</dd></div>
+    <div><dt>גרסת מסמך</dt><dd>2.1, אוקטובר 2026</dd></div>
+    <div><dt>פלטפורמה</dt><dd dir="ltr" style="text-align:right">.NET 10 + xUnit</dd></div>
+    <div><dt>ריפו</dt><dd><a href="https://github.com/maya5768/csharp-api-tests" dir="ltr">maya5768/csharp-api-tests</a></dd></div>
+  </dl>
+</header>
+
+<div class="summary-strip" aria-label="סיכום">
+  <div><b>6</b><span>מקרי בדיקה</span></div>
+  <div><b>6</b><span>מומשו ועוברים ב-CI</span></div>
+  <div><b>4</b><span>רמות אימות</span></div>
+  <div><b>7</b><span>שכבות קוד</span></div>
+  <div><b>2</b><span>פעולות HTTP: ‏GET ו-POST</span></div>
+</div>
+
+<!-- 1 -->
+<section id="goal">
+  <h2><span class="n">1</span>מטרה והיקף</h2>
+  <p class="section-intro">מה הפרויקט מנסה להוכיח, ומה בכוונה נשאר מחוץ לו.</p>
+  <h3>מטרה</h3>
+  <p>לבנות סוויטת בדיקות API ב-<bdi dir="ltr">C#</bdi> שמאמתת לא רק שה-API "עונה", אלא שהתשובה נכונה: קוד סטטוס, תוכן, ומבנה שתואם חוזה מוגדר מראש. בנוסף, להראות שהבדיקות עצמן אמינות, כלומר שהן נכשלות כשמשהו באמת שבור.</p>
+  <p>מטרה שנייה, ברמה זהה: <b>קוד בדיקות שבנוי כמו קוד מוצר</b>. כלומר, שכבות מופרדות, מחלקות עם אחריות אחת ושמות שמתארים בדיוק מה הן עושות, כך שהוספת endpoint או בדיקה חדשה לא מחייבת לגעת בקוד קיים (פירוט בסעיף 4).</p>
+  <div class="cards2">
+    <div class="box">
+      <h3>בתוך ההיקף</h3>
+      <ul>
+        <li>קריאה של פוסט קיים: <code>GET /posts/{id}</code></li>
+        <li>יצירה של פוסט: <code>POST /posts</code></li>
+        <li>אימות קודי סטטוס, שדות חובה וערכים</li>
+        <li>אימות חוזה מול JSON Schema</li>
+        <li>בדיקה שלילית לאימות החוזה</li>
+        <li>תשתית קוד בשכבות (Client, Model, Validator, TestData)</li>
+        <li>הרצה אוטומטית ב-CI</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>מחוץ להיקף</h3>
+      <ul>
+        <li>בדיקות עומס וביצועים</li>
+        <li>בדיקות אבטחה והרשאות (השירות פתוח, ללא אימות משתמש)</li>
+        <li>עדכון ומחיקה (<code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>), שמתוכננים כהרחבה</li>
+        <li>בדיקת שמירה בפועל של נתונים, כי השירות לא שומר מידע</li>
+      </ul>
+    </div>
+  </div>
+  <h3>מה נחשב הצלחה</h3>
+  <ul class="plain">
+    <li>כל מקרי הבדיקה עוברים מקומית וב-CI, וכל אחד מהם נראה נכשל לפחות פעם אחת כשהתנאי שלו הופר.</li>
+    <li>אין בגוף אף בדיקה כתובת URL, פענוח JSON ידני או יצירה של <code>HttpClient</code>. כל אלה נמצאים בשכבות התשתית.</li>
+    <li>מי שקורא רק את שמות הבדיקות ואת גוף הבדיקה מבין מה נבדק, בלי לפתוח קבצים אחרים.</li>
+  </ul>
+</section>
+
+<!-- 2 -->
+<section id="sut">
+  <h2><span class="n">2</span>המערכת הנבדקת</h2>
+  <p class="section-intro">על מה הבדיקות רצות, ומה חשוב לדעת על ההתנהגות שלו.</p>
+  <p><b>JSONPlaceholder</b> הוא שירות REST API ציבורי וחינמי, שנבנה בדיוק לצורך בדיקות ואב-טיפוס. כתובת הבסיס: <code>https://jsonplaceholder.typicode.com/</code></p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Endpoint</th><th>פעולה</th><th>תשובה צפויה</th><th>הערה</th></tr></thead>
+      <tbody>
+        <tr><td class="ltr">GET /posts/1</td><td>קריאת פוסט קיים</td><td>200, אובייקט פוסט</td><td>הנתונים קבועים, ולכן אפשר לצפות לערכים ידועים</td></tr>
+        <tr><td class="ltr">GET /posts/99999</td><td>קריאת פוסט שלא קיים</td><td>404</td><td>משמש בבדיקת ההרחבה</td></tr>
+        <tr><td class="ltr">POST /posts</td><td>יצירת פוסט</td><td>201, הפוסט עם <code>id</code> חדש</td><td>השירות מדמה יצירה ולא שומר את הנתונים</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>מבנה של פוסט: ארבעה שדות. <code>userId</code> ו-<code>id</code> הם מספרים שלמים, ו-<code>title</code> ו-<code>body</code> הם מחרוזות.</p>
+  <h3>דוגמאות תשובה</h3>
+  <p>כך נראות התשובות בפועל. מהן נגזרים המודלים (סעיף 5) והסכמה (סעיף 9).</p>
+  <div class="cards2">
+    <div class="box">
+      <h3><span class="verb get" style="font-family:var(--mono)">GET</span> <code>/posts/1</code> → 200</h3>
+<pre><code>{
+  <span class="s">"userId"</span>: <span class="s">1</span>,
+  <span class="s">"id"</span>: <span class="s">1</span>,
+  <span class="s">"title"</span>: <span class="s">"sunt aut facere repellat..."</span>,
+  <span class="s">"body"</span>: <span class="s">"quia et suscipit..."</span>
+}</code></pre>
+    </div>
+    <div class="box">
+      <h3><span class="verb post" style="font-family:var(--mono)">POST</span> <code>/posts</code> → 201</h3>
+<pre><code>{
+  <span class="s">"title"</span>: <span class="s">"Test title"</span>,
+  <span class="s">"body"</span>: <span class="s">"Test body"</span>,
+  <span class="s">"userId"</span>: <span class="s">1</span>,
+  <span class="s">"id"</span>: <span class="s">101</span>
+}</code></pre>
+      <p>השירות מחזיר את מה שנשלח, ומוסיף <code>id</code> חדש (תמיד 101, כי יש בו 100 פוסטים קבועים).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section id="approach">
+  <h2><span class="n">3</span>גישת הבדיקות</h2>
+  <p class="section-intro">כל תשובה נבדקת בארבע רמות, מהבסיסית לעמוקה. כל רמה תופסת סוג אחר של תקלה.</p>
+  <div class="levels">
+    <div><b>סטטוס</b><p>הקוד שחזר הוא הקוד הצפוי (200, 201, 404). תופס endpoint שבור או שגיאת שרת.</p></div>
+    <div><b>תוכן</b><p>השדות הצפויים קיימים, ובשדות שערכם ידוע הערך נכון. תופס שדה חסר או ערך שגוי.</p></div>
+    <div><b>חוזה</b><p>המבנה כולו תואם ל-JSON Schema, כולל טיפוסים. תופס שינוי מבני שלא בדקנו במפורש.</p></div>
+    <div><b>שלילית</b><p>אימות החוזה נכשל כשהקלט שבור. מוכיח שהבדיקה עצמה לא עוברת תמיד.</p></div>
+  </div>
+  <h3>איפה בדיקות API בפירמידת הבדיקות</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>שכבה</th><th>מה נבדק</th><th>מהירות ויציבות</th><th>בפרויקט הזה</th></tr></thead>
+      <tbody>
+        <tr><td>Unit</td><td>פונקציה או מחלקה בודדת, בלי רשת</td><td>הכי מהירה ויציבה</td><td>TC-04 קרובה לכך: בודקת את מנגנון האימות בלי רשת</td></tr>
+        <tr><td><b>API (Service)</b></td><td>החוזה של השירות: בקשה, סטטוס, גוף תשובה</td><td>מהירה, תלויה ברשת</td><td><b>עיקר הסוויטה</b>: TC-01, 02, 03, 05, 06</td></tr>
+        <tr><td>UI / E2E</td><td>זרימה מלאה דרך הדפדפן</td><td>איטית ושבירה יותר</td><td>מחוץ להיקף (הרחבה בסעיף 16)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>בדיקות API נותנות את היחס הטוב ביותר בין כיסוי לעלות: הן בודקות את ההתנהגות האמיתית של השירות, אבל בלי התלות בממשק משתמש שמשתנה הרבה.</p>
+  <h3>עקרונות</h3>
+  <ul class="plain">
+    <li><b>תבנית AAA:</b> כל בדיקה בנויה משלושה חלקים, Arrange (הכנה), Act (שליחת הבקשה), ו-Assert (בדיקת התוצאה). בקוד הם מסומנים בהערה.</li>
+    <li><b>בדיקה אחת, מטרה אחת:</b> כשבדיקה נכשלת, השם שלה אומר מיד מה נשבר.</li>
+    <li><b>שמות בדיקה:</b> לפי התבנית <code>Action_ExpectedResult</code>, למשל <code>GetPost_ReturnsOk</code>.</li>
+    <li><b>בדיקות עצמאיות:</b> אין תלות בסדר ההרצה, ואף בדיקה לא מסתמכת על תוצאה של בדיקה אחרת.</li>
+    <li><b>הבדיקה לא יודעת HTTP:</b> הבדיקה מבקשת "פוסט לפי מזהה", ולא בונה בקשת GET. את הפרטים מסתירה שכבת ה-Client (סעיף 4).</li>
+    <li><b>הודעת כישלון ברורה:</b> כשאימות סכמה נכשל, רשימת השגיאות מוצגת בהודעה, כדי שלא יהיה צורך לדבג כדי להבין מה שבור.</li>
+  </ul>
+</section>
+
+<!-- 4 -->
+<section id="architecture">
+  <h2><span class="n">4</span>ארכיטקטורת הקוד</h2>
+  <p class="section-intro">איך הקוד מאורגן, לפי איזה עיקרון, ולמה החלוקה הזו נכונה גם כשהפרויקט יגדל.</p>
+
+  <h3>העיקרון: Page Object Model, מותאם ל-API</h3>
+  <p><b>Page Object Model (POM)</b> נולד בבדיקות UI: לכל עמוד באתר יש מחלקה שמסתירה את פרטי ה-HTML (selectors, כפתורים), והבדיקה קוראת לפעולה בשם עסקי, למשל <code>loginPage.Login(user, password)</code>. אם העמוד משתנה, מעדכנים מחלקה אחת, לא עשרות בדיקות.</p>
+  <p>בבדיקות API העיקרון זהה, רק שה"עמוד" הוא <b>משאב</b> (resource). לכל משאב יש מחלקת Client שמסתירה את פרטי ה-HTTP: הנתיב, הפעלים, הסריאליזציה. הבדיקה קוראת ל-<code>postsClient.GetPostByIdAsync(1)</code>, ולא יודעת שמאחורי זה יש <code>GET posts/1</code>. בספרות הגישה נקראת גם <b>API Object Model</b> או <b>Service Object</b>.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>מושג ב-POM של UI</th><th>המקבילה כאן</th><th>דוגמה</th></tr></thead>
+      <tbody>
+        <tr><td>Page (עמוד)</td><td>משאב API</td><td class="ltr">/posts</td></tr>
+        <tr><td>Page Object (מחלקת עמוד)</td><td>API Client</td><td class="ltr">PostsApiClient</td></tr>
+        <tr><td>Locator (selector)</td><td>נתיב יחסי, קבוע פרטי במחלקה</td><td class="ltr">PostsPath = "posts"</td></tr>
+        <tr><td>פעולה בעמוד</td><td>מתודה ציבורית ב-Client</td><td class="ltr">CreatePostAsync(request)</td></tr>
+        <tr><td>BasePage</td><td>מחלקת בסיס אבסטרקטית</td><td class="ltr">ApiClientBase</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>לפני ואחרי</h3>
+  <div class="cards2">
+    <div class="box">
+      <h3>לפני: מחלקה אחת עושה הכול</h3>
+      <ul>
+        <li><code>HttpClient</code> נוצר ומוגדר בתוך מחלקת הבדיקות.</li>
+        <li>הבדיקה כותבת את הנתיב <code>"posts/1"</code> בעצמה.</li>
+        <li>כל בדיקה חדשה תפענח JSON בעצמה, ותשכפל קוד.</li>
+        <li>שינוי של כתובת, נתיב או ספרייה מחייב לעבור על כל הבדיקות.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>אחרי (PR #4): שכבות עם אחריות אחת</h3>
+      <ul>
+        <li>תצורה במקום אחד: <code>ApiSettings</code>.</li>
+        <li>פרטי HTTP במקום אחד: <code>PostsApiClient</code>.</li>
+        <li>נתוני קלט במקום אחד: <code>PostTestData</code>.</li>
+        <li>הבדיקה מכילה רק Arrange, Act ו-Assert.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>מסלול קריאה בזמן ריצה</h3>
+  <p>מה קורה כשהבדיקה <code>GetPost_ReturnsOk</code> רצה. כל שלב מכיר רק את השלב שאחריו.</p>
+  <div class="flow">
+    <div><b>PostApiTests</b>מבקשת "פוסט 1" מה-Client</div>
+    <div><b>PostsApiClient</b>מתרגם לנתיב <code>posts/1</code></div>
+    <div><b>ApiClientBase</b>שולח GET דרך ה-<code>HttpClient</code></div>
+    <div><b>HttpClient</b>משותף, נוצר פעם אחת ב-Fixture</div>
+    <div><b>JSONPlaceholder</b>מחזיר תשובה, שחוזרת עד הבדיקה</div>
+  </div>
+
+  <h3>השכבות</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>שכבה</th><th class="ltr">תיקייה</th><th>אחריות</th><th>למה היא קיימת</th></tr></thead>
+      <tbody>
+        <tr><td><b>Configuration</b></td><td class="ltr">Configuration/</td><td>כתובת בסיס, timeout</td><td>מעבר לסביבה אחרת הוא שינוי של שורה אחת</td></tr>
+        <tr><td><b>Models</b></td><td class="ltr">Models/</td><td>ייצוג הנתונים שנשלחים ומתקבלים</td><td>הבדיקה עובדת עם <code>post.Title</code>, ולא עם JSON גולמי</td></tr>
+        <tr><td><b>Clients</b></td><td class="ltr">Clients/</td><td>שליחת בקשות HTTP למשאב</td><td>הלב של POM: נתיבים ופעלים מוסתרים מהבדיקה</td></tr>
+        <tr><td><b>Fixtures</b></td><td class="ltr">Fixtures/</td><td>יצירה ושחרור של משאבים משותפים</td><td><code>HttpClient</code> אחד לכל מחלקת בדיקות, ושחרור מסודר בסוף</td></tr>
+        <tr><td><b>Validation</b></td><td class="ltr">Validation/</td><td>אימות JSON מול סכמה</td><td>הבדיקות לא תלויות ישירות ב-API של JsonSchema.Net</td></tr>
+        <tr><td><b>TestData</b></td><td class="ltr">TestData/</td><td>מזהים וגופי בקשה לבדיקות</td><td>אין "מספרי קסם" בתוך הבדיקות, ולכל קלט יש שם</td></tr>
+        <tr><td><b>Tests</b></td><td class="ltr">Tests/</td><td>תרחישי הבדיקה וה-Assert</td><td>השכבה היחידה שמכירה את xUnit ו-<code>Assert</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="why"><b>כיוון התלות:</b> השכבות תלויות רק "כלפי מטה". ‏Tests מכירה את Clients, ‏TestData ו-Validation. ‏Clients מכירה את Models ו-<code>HttpClient</code>. אף שכבת תשתית לא מכירה את xUnit. לכן אפשר להשתמש ב-<code>PostsApiClient</code> גם מחוץ לבדיקות, למשל בסקריפט שמכין נתונים.</p>
+
+  <h3>עקרונות OOP שבשימוש</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>עיקרון</th><th>איפה בקוד</th><th>מה זה נותן</th></tr></thead>
+      <tbody>
+        <tr><td><b>Single Responsibility</b><br>אחריות אחת לכל מחלקה</td><td><code>PostsApiClient</code> שולח בקשות ולא בודק אותן. <code>JsonSchemaValidator</code> מאמת ולא שולח.</td><td>לכל סוג שינוי יש מקום אחד בקוד</td></tr>
+        <tr><td><b>Encapsulation</b><br>הסתרת מימוש</td><td>הנתיב <code>"posts"</code> הוא <code>private const</code>. ה-<code>HttpClient</code> הוא שדה פרטי.</td><td>הבדיקה לא יכולה לעקוף את ה-Client ולשלוח בקשה "ידנית"</td></tr>
+        <tr><td><b>Inheritance</b><br>ירושה</td><td><code>PostsApiClient : ApiClientBase</code></td><td>קוד השליחה המשותף נכתב פעם אחת. Client חדש יורש אותו</td></tr>
+        <tr><td><b>Abstraction</b><br>הפשטה</td><td><code>ApiClientBase</code> היא <code>abstract</code>, והמתודות שלה <code>protected</code>.</td><td>אי אפשר ליצור "Client כללי". כל Client מייצג משאב אמיתי</td></tr>
+        <tr><td><b>Dependency Injection</b><br>הזרקת תלויות</td><td>ה-Client מקבל <code>HttpClient</code> בבנאי. הבדיקה מקבלת את ה-Fixture בבנאי.</td><td>אף מחלקה לא יוצרת את התלויות שלה בעצמה, ולכן קל להחליף אותן</td></tr>
+        <tr><td><b>Immutability</b><br>אי-שינוי</td><td>המודלים הם <code>record</code>.</td><td>נתוני בדיקה לא משתנים בטעות בין שלבי הבדיקה</td></tr>
+        <tr><td><b>sealed</b></td><td>כל מחלקה שלא תוכננה לירושה מסומנת <code>sealed</code>.</td><td>הכוונה ברורה: רק <code>ApiClientBase</code> נועדה להרחבה</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>מוסכמות שמות</h3>
+  <p>השם של מחלקה אומר מה <b>התפקיד</b> שלה, והשם של מתודה אומר מה <b>הפעולה</b> שהיא עושה. מי שקורא את השם לא צריך לפתוח את הקובץ.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>סוג</th><th class="ltr">תבנית</th><th class="ltr">דוגמה</th><th>למה</th></tr></thead>
+      <tbody>
+        <tr><td>Client של משאב</td><td class="ltr">{Resource}ApiClient</td><td class="ltr">PostsApiClient</td><td>ברור לאיזה משאב הוא שייך ושהוא מדבר עם API</td></tr>
+        <tr><td>מתודת Client</td><td class="ltr">{Verb}{Resource}{By...}Async</td><td class="ltr">GetPostByIdAsync</td><td>פעולה עסקית, והסיומת <code>Async</code> לפי מוסכמת <bdi dir="ltr">.NET</bdi></td></tr>
+        <tr><td>מודל תשובה</td><td class="ltr">{Resource}</td><td class="ltr">Post</td><td>מייצג את המשאב כפי שהשרת מחזיר אותו</td></tr>
+        <tr><td>מודל בקשה</td><td class="ltr">{Action}{Resource}Request</td><td class="ltr">CreatePostRequest</td><td>מבדיל בין מה ששולחים (בלי <code>id</code>) למה שמקבלים</td></tr>
+        <tr><td>נתוני בדיקה</td><td class="ltr">{Resource}TestData</td><td class="ltr">PostTestData</td><td>כל נתוני הקלט של משאב במקום אחד</td></tr>
+        <tr><td>מאמת</td><td class="ltr">{Format}Validator</td><td class="ltr">JsonSchemaValidator</td><td>אומר מה הוא מאמת ומול מה</td></tr>
+        <tr><td>Fixture</td><td class="ltr">{Resource}Fixture</td><td class="ltr">ApiClientFixture</td><td>מה הוא מספק לבדיקות</td></tr>
+        <tr><td>מחלקת בדיקות</td><td class="ltr">{Resource}ApiTests</td><td class="ltr">PostApiTests</td><td>איזה משאב נבדק</td></tr>
+        <tr><td>בדיקה</td><td class="ltr">{Action}_{ExpectedResult}</td><td class="ltr">CreatePost_ReturnsCreated</td><td>הפעולה והתוצאה הצפויה, כפי שמופיעים בדוח הכישלון</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>למה זו ארכיטקטורה נכונה</h3>
+  <ul class="plain">
+    <li><b>נקודת שינוי אחת לכל סוג שינוי:</b> כתובת אחרת → <code>ApiSettings</code>. נתיב אחר → <code>PostsApiClient</code>. שדה חדש בפוסט → <code>Post</code>. גרסה חדשה של JsonSchema.Net → <code>JsonSchemaValidator</code>. אף שינוי כזה לא נוגע בבדיקות.</li>
+    <li><b>בדיקות קריאות:</b> גוף הבדיקה קצר כמו התיאור שלה. מה שנשאר בו הוא רק <i>מה</i> נבדק, לא <i>איך</i> מדברים עם השרת.</li>
+    <li><b>הרחבה בלי שבירה (Open/Closed):</b> משאב חדש, למשל <code>/comments</code>, הוא מחלקה חדשה <code>CommentsApiClient : ApiClientBase</code>. שום קובץ קיים לא משתנה.</li>
+    <li><b>אין כפילות:</b> השליחה, הסריאליזציה ויצירת ה-<code>HttpClient</code> כתובות פעם אחת.</li>
+    <li><b>שימוש נכון במשאבים:</b> <code>HttpClient</code> אחד משותף, שמשוחרר בסוף ההרצה, במקום אחד חדש לכל בדיקה, שעלול למצות את ה-sockets.</li>
+  </ul>
+</section>
+
+<!-- 5 -->
+<section id="classes">
+  <h2><span class="n">5</span>תיעוד המחלקות</h2>
+  <p class="section-intro">כרטיס לכל מחלקת תשתית: מה התפקיד שלה, על מה היא אחראית, ועל מה היא בכוונה <b>לא</b> אחראית. מחלקת הבדיקות עצמה מתועדת בסעיף 8.</p>
+
+  <!-- C-01 -->
+  <article class="tc">
+    <div class="tc-head">
+      <span class="tc-id">C-01</span>
+      <h3 class="tc-title">ApiSettings: הגדרות הסביבה</h3>
+      <span class="tag">Configuration</span>
+      <span class="st done">מומשה</span>
+      <div class="tc-method">Configuration/ApiSettings.cs</div>
+    </div>
+    <div class="tc-body">
+      <dl>
+        <dt>תפקיד</dt><dd>מקום יחיד לערכים שתלויים בסביבה: כתובת הבסיס וה-timeout.</dd>
+        <dt>אחראית על</dt><dd>להחזיק את הערכים ולתת להם שם.</dd>
+        <dt>לא אחראית על</dt><dd>יצירת <code>HttpClient</code>. זה התפקיד של ה-Fixture.</dd>
+        <dt>ממשק ציבורי</dt><dd><code>BaseUrl</code>, <code>RequestTimeout</code></dd>
+      </dl>
+      <p class="why"><b>למה <code>static</code>:</b> אין לה מצב שמשתנה, ואין צורך ביותר ממופע אחד. כשיהיו כמה סביבות, אפשר להחליף אותה בקריאה מ-<code>appsettings.json</code> בלי לשנות את מי שמשתמש בה.</p>
+      <details class="code"><summary>הקוד</summary>
+<pre><code><span class="k">namespace</span> ApiTests.Configuration;
+
+<span class="k">public static class</span> <span class="t">ApiSettings</span>
+{
+    <span class="k">public static readonly</span> <span class="t">Uri</span> BaseUrl = <span class="k">new</span>(<span class="s">"https://jsonplaceholder.typicode.com/"</span>);
+    <span class="k">public static readonly</span> <span class="t">TimeSpan</span> RequestTimeout = <span class="t">TimeSpan</span>.FromSeconds(<span class="s">30</span>);
+}</code></pre>
+      </details>
+    </div>
+  </article>
+
+  <!-- C-02 -->
+  <article class="tc">
+    <div class="tc-head">
+      <span class="tc-id">C-02</span>
+      <h3 class="tc-title">Post ו-CreatePostRequest: מודלי הנתונים</h3>
+      <span class="tag">Models</span>
+      <span class="st done">מומשה</span>
+      <div class="tc-method">Models/Post.cs · Models/CreatePostRequest.cs</div>
+    </div>
+    <div class="tc-body">
+      <dl>
+        <dt>תפקיד</dt><dd>‏<code>Post</code> מייצג פוסט כפי שהשרת מחזיר אותו. <code>CreatePostRequest</code> מייצג את מה ששולחים כדי ליצור פוסט.</dd>
+        <dt>אחראית על</dt><dd>מבנה הנתונים בלבד. <bdi dir="ltr">System.Text.Json</bdi> ממיר אותם ל-JSON ובחזרה.</dd>
+        <dt>לא אחראית על</dt><dd>שליחה, אימות או לוגיקה. אין בהם מתודות.</dd>
+        <dt>ממשק ציבורי</dt><dd><code>UserId</code>, <code>Id</code>, <code>Title</code>, <code>Body</code></dd>
+      </dl>
+      <p class="why"><b>למה שני מודלים:</b> בבקשת יצירה אין <code>id</code>, כי השרת קובע אותו. מודל אחד היה שולח <code>"id": 0</code>, שהוא ערך שגוי. ההפרדה גם מתעדת בקוד את ההבדל בין קלט לפלט.</p>
+      <p class="why"><b>למה <code>record</code>:</b> הוא immutable, משווה לפי ערכים, והקוד קצר. שמות המאפיינים ב-PascalCase מתורגמים אוטומטית ל-camelCase ב-JSON, כי <code>ReadFromJsonAsync</code> ו-<code>PostAsJsonAsync</code> משתמשים בהגדרות Web כברירת מחדל.</p>
+      <details class="code"><summary>הקוד</summary>
+<pre><code><span class="c">// Models/Post.cs</span>
+<span class="k">namespace</span> ApiTests.Models;
+
+<span class="k">public sealed record</span> <span class="t">Post</span>(<span class="k">int</span> UserId, <span class="k">int</span> Id, <span class="k">string</span> Title, <span class="k">string</span> Body);
+
+<span class="c">// Models/CreatePostRequest.cs</span>
+<span class="k">namespace</span> ApiTests.Models;
+
+<span class="k">public sealed record</span> <span class="t">CreatePostRequest</span>(<span class="k">int</span> UserId, <span class="k">string</span> Title, <span class="k">string</span> Body);</code></pre>
+      </details>
+    </div>
+  </article>
+
+  <!-- C-03 -->
+  <article class="tc">
+    <div class="tc-head">
+      <span class="tc-id">C-03</span>
+      <h3 class="tc-title">ApiClientBase: מחלקת בסיס לכל ה-Clients</h3>
+      <span class="tag contract">Clients</span>
+      <span class="st done">מומשה</span>
+      <div class="tc-method">Clients/ApiClientBase.cs</div>
+    </div>
+    <div class="tc-body">
+      <dl>
+        <dt>תפקיד</dt><dd>המקבילה ל-<code>BasePage</code> ב-POM: הקוד המשותף לכל Client, שנכתב פעם אחת.</dd>
+        <dt>אחראית על</dt><dd>להחזיק את ה-<code>HttpClient</code> ולשלוח GET ו-POST עם נתיב יחסי.</dd>
+        <dt>לא אחראית על</dt><dd>לדעת נתיבים של משאב מסוים. היא לא מכירה את <code>posts</code>.</dd>
+        <dt>תלויות</dt><dd><code>HttpClient</code>, מוזרק בבנאי.</dd>
+        <dt>ממשק</dt><dd><code>protected</code> בלבד: <code>SendGetAsync</code>, <code>SendPostAsync</code>. רק מחלקות יורשות רואות אותן.</dd>
+      </dl>
+      <p class="why"><b>למה <code>abstract</code> ו-<code>protected</code>:</b> בדיקה לא אמורה לשלוח "GET כללי" לנתיב כלשהו. היא חייבת לעבור דרך Client של משאב, שנותן לפעולה שם. כך ה-encapsulation נאכף על ידי הקומפיילר, ולא רק על ידי הסכמה בצוות.</p>
+      <p class="why"><b>למה מחזירים <code>HttpResponseMessage</code> ולא זורקים שגיאה על 404:</b> קוד סטטוס לא מוצלח הוא תוצאה שבודקים (TC-06), לא תקלה. ה-Client מחזיר את התשובה כמו שהיא, והבדיקה מחליטה.</p>
+      <details class="code"><summary>הקוד</summary>
+<pre><code><span class="k">using</span> System.Net.Http.Json;
+
+<span class="k">namespace</span> ApiTests.Clients;
+
+<span class="k">public abstract class</span> <span class="t">ApiClientBase</span>
+{
+    <span class="k">private readonly</span> <span class="t">HttpClient</span> _httpClient;
+
+    <span class="k">protected</span> ApiClientBase(<span class="t">HttpClient</span> httpClient)
+    {
+        _httpClient = httpClient;
+    }
+
+    <span class="k">protected</span> <span class="t">Task</span>&lt;<span class="t">HttpResponseMessage</span>&gt; SendGetAsync(<span class="k">string</span> relativePath) =&gt;
+        _httpClient.GetAsync(relativePath);
+
+    <span class="k">protected</span> <span class="t">Task</span>&lt;<span class="t">HttpResponseMessage</span>&gt; SendPostAsync&lt;<span class="t">TBody</span>&gt;(<span class="k">string</span> relativePath, <span class="t">TBody</span> body) =&gt;
+        _httpClient.PostAsJsonAsync(relativePath, body);
+}</code></pre>
+      </details>
+    </div>
+  </article>
+
+  <!-- C-04 -->
+  <article class="tc">
+    <div class="tc-head">
+      <span class="tc-id">C-04</span>
+      <h3 class="tc-title">PostsApiClient: הפעולות על המשאב /posts</h3>
+      <span class="tag contract">Clients</span>
+      <span class="st done">מומשה</span>
+      <div class="tc-method">Clients/PostsApiClient.cs</div>
+    </div>
+    <div class="tc-body">
+      <dl>
+        <dt>תפקיד</dt><dd>ה-"Page Object" של הפרויקט: כל מה שאפשר לעשות עם פוסטים, בשמות של פעולות.</dd>
+        <dt>אחראית על</dt><dd>לתרגם פעולה עסקית לנתיב ולפועל HTTP.</dd>
+        <dt>לא אחראית על</dt><dd>Assert, פענוח התשובה, או החלטה אם התשובה תקינה.</dd>
+        <dt>תלויות</dt><dd>יורשת מ-<code>ApiClientBase</code>. משתמשת ב-<code>CreatePostRequest</code>.</dd>
+        <dt>ממשק ציבורי</dt><dd><code>GetPostByIdAsync(int postId)</code>, <code>CreatePostAsync(CreatePostRequest request)</code></dd>
+      </dl>
+      <p class="why"><b>הרחבה:</b> כשיתווספו <code>PUT</code> ו-<code>DELETE</code> (סעיף 16), הן יהיו מתודות חדשות כאן, למשל <code>UpdatePostAsync</code> ו-<code>DeletePostAsync</code>. הבדיקות הקיימות לא ישתנו.</p>
+      <details class="code"><summary>הקוד</summary>
+<pre><code><span class="k">using</span> ApiTests.Models;
+
+<span class="k">namespace</span> ApiTests.Clients;
+
+<span class="k">public sealed class</span> <span class="t">PostsApiClient</span> : <span class="t">ApiClientBase</span>
+{
+    <span class="k">private const string</span> PostsPath = <span class="s">"posts"</span>;
+
+    <span class="k">public</span> PostsApiClient(<span class="t">HttpClient</span> httpClient) : <span class="k">base</span>(httpClient) { }
+
+    <span class="k">public</span> <span class="t">Task</span>&lt;<span class="t">HttpResponseMessage</span>&gt; GetPostByIdAsync(<span class="k">int</span> postId) =&gt;
+        SendGetAsync(<span class="s">$"{PostsPath}/{postId}"</span>);
+
+    <span class="k">public</span> <span class="t">Task</span>&lt;<span class="t">HttpResponseMessage</span>&gt; CreatePostAsync(<span class="t">CreatePostRequest</span> request) =&gt;
+        SendPostAsync(PostsPath, request);
+}</code></pre>
+      </details>
+    </div>
+  </article>
+
+  <!-- C-05 -->
+  <article class="tc">
+    <div class="tc-head">
+      <span class="tc-id">C-05</span>
+      <h3 class="tc-title">ApiClientFixture: HttpClient משותף לכל מחלקת בדיקות</h3>
+      <span class="tag">Fixtures</span>
+      <span class="st done">מומשה</span>
+      <div class="tc-method">Fixtures/ApiClientFixture.cs</div>
+    </div>
+    <div class="tc-body">
+      <dl>
+        <dt>תפקיד</dt><dd>ליצור את ה-<code>HttpClient</code> וה-Clients פעם אחת, לתת אותם לבדיקות, ולשחרר אותם בסוף.</dd>
+        <dt>אחראית על</dt><dd>מחזור החיים (lifecycle) של המשאבים המשותפים.</dd>
+        <dt>לא אחראית על</dt><dd>שליחת בקשות. היא רק "מרכיבה" את ה-Clients.</dd>
+        <dt>תלויות</dt><dd><code>ApiSettings</code>, <code>PostsApiClient</code>.</dd>
+        <dt>ממשק ציבורי</dt><dd><code>PostsClient</code>, <code>Dispose()</code></dd>
+      </dl>
+      <p class="why"><b>איך זה עובד ב-xUnit:</b> מחלקת בדיקות שמממשת <code>IClassFixture&lt;ApiClientFixture&gt;</code> מקבלת את ה-Fixture בבנאי. ‏xUnit יוצר את ה-Fixture פעם אחת לפני הבדיקה הראשונה במחלקה, ומפעיל <code>Dispose</code> אחרי האחרונה. זה החליף את השדה <code>static readonly HttpClient</code> שהיה בקוד המקורי, והוסיף שחרור מסודר.</p>
+      <details class="code"><summary>הקוד</summary>
+<pre><code><span class="k">using</span> ApiTests.Clients;
+<span class="k">using</span> ApiTests.Configuration;
+
+<span class="k">namespace</span> ApiTests.Fixtures;
+
+<span class="k">public sealed class</span> <span class="t">ApiClientFixture</span> : <span class="t">IDisposable</span>
+{
+    <span class="k">private readonly</span> <span class="t">HttpClient</span> _httpClient;
+
+    <span class="k">public</span> ApiClientFixture()
+    {
+        _httpClient = <span class="k">new</span> <span class="t">HttpClient</span>
+        {
+            BaseAddress = <span class="t">ApiSettings</span>.BaseUrl,
+            Timeout = <span class="t">ApiSettings</span>.RequestTimeout
+        };
+        PostsClient = <span class="k">new</span> <span class="t">PostsApiClient</span>(_httpClient);
+    }
+
+    <span class="k">public</span> <span class="t">PostsApiClient</span> PostsClient { <span class="k">get</span>; }
+
+    <span class="k">public void</span> Dispose() =&gt; _httpClient.Dispose();
+}</code></pre>
+      </details>
+    </div>
+  </article>
+
+  <!-- C-06 -->
+  <article class="tc">
+    <div class="tc-head">
+      <span class="tc-id">C-06</span>
+      <h3 class="tc-title">JsonSchemaValidator: אימות JSON מול סכמה</h3>
+      <span class="tag contract">Validation</span>
+      <span class="st done">מומשה</span>
+      <div class="tc-method">Validation/JsonSchemaValidator.cs · Validation/SchemaValidationResult.cs</div>
+    </div>
+    <div class="tc-body">
+      <dl>
+        <dt>תפקיד</dt><dd>לטעון סכמה מקובץ, לאמת מולה מחרוזת JSON, ולהחזיר תוצאה פשוטה: תקין או לא, ורשימת שגיאות.</dd>
+        <dt>אחראית על</dt><dd>כל הקוד שתלוי בספריית JsonSchema.Net.</dd>
+        <dt>לא אחראית על</dt><dd>מאיפה ה-JSON הגיע. היא לא יודעת אם הוא בא מהשרת (TC-03) או נבנה בקוד (TC-04).</dd>
+        <dt>תלויות</dt><dd>JsonSchema.Net ‏9.4.0, ‏<bdi dir="ltr">System.Text.Json</bdi>.</dd>
+        <dt>ממשק ציבורי</dt><dd><code>Validate(string json)</code> שמחזירה <code>SchemaValidationResult</code></dd>
+      </dl>
+      <p class="why"><b>למה לעטוף את הספרייה (Adapter):</b> הבדיקות מקבלות <code>SchemaValidationResult</code>, טיפוס שלנו, ולא <code>EvaluationResults</code> של הספרייה. אם הממשק של JsonSchema.Net ישתנה בגרסה הבאה, מתקנים קובץ אחד. זה מטפל ישירות בסיכון שמתואר בסעיף 11.</p>
+      <p class="why"><b>ממשק הספרייה בגרסה 9.4.0 (נבדק מול החבילה המותקנת):</b> ‏<code>JsonSchema.FromFile(path)</code> לטעינה, <code>schema.Evaluate(JsonElement, EvaluationOptions)</code> לאימות, ו-<code>OutputFormat.List</code> כדי לקבל את כל השגיאות ברשימה שטוחה דרך <code>Details</code> ו-<code>Errors</code>.</p>
+      <p class="why"><b>טעינה פעם אחת:</b> בבדיקות, המופע נשמר בשדה <code>static readonly</code>. כך הסכמה נטענת ונרשמת פעם אחת לכל ההרצה, ולא בכל בדיקה.</p>
+      <details class="code"><summary>הקוד</summary>
+<pre><code><span class="c">// Validation/SchemaValidationResult.cs</span>
+<span class="k">namespace</span> ApiTests.Validation;
+
+<span class="k">public sealed record</span> <span class="t">SchemaValidationResult</span>(<span class="k">bool</span> IsValid, <span class="t">IReadOnlyList</span>&lt;<span class="k">string</span>&gt; Errors);
+
+<span class="c">// Validation/JsonSchemaValidator.cs</span>
+<span class="k">using</span> System.Text.Json;
+<span class="k">using</span> Json.Schema;
+
+<span class="k">namespace</span> ApiTests.Validation;
+
+<span class="k">public sealed class</span> <span class="t">JsonSchemaValidator</span>
+{
+    <span class="k">private static readonly</span> <span class="t">EvaluationOptions</span> Options = <span class="k">new</span>() { OutputFormat = <span class="t">OutputFormat</span>.List };
+    <span class="k">private readonly</span> <span class="t">JsonSchema</span> _schema;
+
+    <span class="k">public</span> JsonSchemaValidator(<span class="k">string</span> schemaFileName)
+    {
+        <span class="k">string</span> schemaPath = <span class="t">Path</span>.Combine(<span class="t">AppContext</span>.BaseDirectory, <span class="s">"Schemas"</span>, schemaFileName);
+        _schema = <span class="t">JsonSchema</span>.FromFile(schemaPath);
+    }
+
+    <span class="k">public</span> <span class="t">SchemaValidationResult</span> Validate(<span class="k">string</span> json)
+    {
+        <span class="k">using</span> <span class="t">JsonDocument</span> document = <span class="t">JsonDocument</span>.Parse(json);
+        <span class="t">EvaluationResults</span> results = _schema.Evaluate(document.RootElement, Options);
+
+        <span class="t">List</span>&lt;<span class="k">string</span>&gt; errors = (results.Details ?? [])
+            .Prepend(results)
+            .Where(node =&gt; node.Errors <span class="k">is not null</span>)
+            .SelectMany(node =&gt; node.Errors!.Values)
+            .ToList();
+
+        <span class="k">return new</span> <span class="t">SchemaValidationResult</span>(results.IsValid, errors);
+    }
+}</code></pre>
+      </details>
+    </div>
+  </article>
+
+  <!-- C-07 -->
+  <article class="tc">
+    <div class="tc-head">
+      <span class="tc-id">C-07</span>
+      <h3 class="tc-title">PostTestData: נתוני הקלט של הבדיקות</h3>
+      <span class="tag">TestData</span>
+      <span class="st done">מומשה</span>
+      <div class="tc-method">TestData/PostTestData.cs</div>
+    </div>
+    <div class="tc-body">
+      <dl>
+        <dt>תפקיד</dt><dd>לתת שם לכל ערך קלט, כך שבבדיקה כתוב <code>ExistingPostId</code> ולא <code>1</code>.</dd>
+        <dt>אחראית על</dt><dd>מזהים ידועים, גופי בקשה תקינים, ו-JSON שבור לבדיקות שליליות.</dd>
+        <dt>לא אחראית על</dt><dd>שליחה או בדיקה של הנתונים.</dd>
+        <dt>ממשק ציבורי</dt><dd><code>ExistingPostId</code>, <code>NonExistingPostId</code>, <code>NewValidPost()</code>, <code>PostJsonMissingTitle()</code></dd>
+      </dl>
+      <p class="why"><b>למה מתודות ולא שדות:</b> ‏<code>NewValidPost()</code> מחזירה מופע חדש בכל קריאה. כך שתי בדיקות אף פעם לא חולקות אובייקט, וזה שומר על העצמאות שלהן.</p>
+      <details class="code"><summary>הקוד</summary>
+<pre><code><span class="k">using</span> ApiTests.Models;
+
+<span class="k">namespace</span> ApiTests.TestData;
+
+<span class="k">public static class</span> <span class="t">PostTestData</span>
+{
+    <span class="k">public const int</span> ExistingPostId = <span class="s">1</span>;
+    <span class="k">public const int</span> NonExistingPostId = <span class="s">99999</span>;
+
+    <span class="k">public static</span> <span class="t">CreatePostRequest</span> NewValidPost() =&gt;
+        <span class="k">new</span>(UserId: <span class="s">1</span>, Title: <span class="s">"Test title"</span>, Body: <span class="s">"Test body"</span>);
+
+    <span class="k">public static string</span> PostJsonMissingTitle() =&gt;
+        <span class="s">""" { "userId": 1, "id": 1, "body": "Sample body" } """</span>;
+}</code></pre>
+      </details>
+    </div>
+  </article>
+</section>
+
+<!-- 6 -->
+<section id="env">
+  <h2><span class="n">6</span>סביבה וכלים</h2>
+  <p class="section-intro">הגרסאות המדויקות שבהן הפרויקט נבנה ונבדק.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>רכיב</th><th class="ltr">גרסה</th><th>תפקיד</th></tr></thead>
+      <tbody>
+        <tr><td><bdi dir="ltr">.NET SDK</bdi></td><td class="ltr">10.0.400</td><td>בנייה והרצה של הקוד</td></tr>
+        <tr><td>xUnit</td><td class="ltr">2.9.3</td><td>ספריית הבדיקות: <code>[Fact]</code>, ‏<code>IClassFixture</code> ו-Assert</td></tr>
+        <tr><td>xunit.runner.visualstudio</td><td class="ltr">3.1.4</td><td>מריץ את הבדיקות דרך <code>dotnet test</code> ובעורך</td></tr>
+        <tr><td>Microsoft.NET.Test.Sdk</td><td class="ltr">17.14.1</td><td>תשתית ההרצה של בדיקות ב-<bdi dir="ltr">.NET</bdi></td></tr>
+        <tr><td>JsonSchema.Net</td><td class="ltr">9.4.0</td><td>אימות JSON מול סכמה, עטופה ב-<code>JsonSchemaValidator</code>. נבחרה כי הרישיון שלה חופשי</td></tr>
+        <tr><td>HttpClient, <bdi dir="ltr">System.Net.Http.Json</bdi>, <bdi dir="ltr">System.Text.Json</bdi></td><td class="ltr">built-in</td><td>שליחת בקשות HTTP והמרה בין JSON למודלים, מובנים ב-<bdi dir="ltr">.NET</bdi></td></tr>
+        <tr><td>GitHub Actions</td><td class="ltr">—</td><td>הרצה אוטומטית של הבדיקות (CI)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>סביבת פיתוח: Windows 11, ‏VS Code עם התוסף <bdi dir="ltr">C# Dev Kit</bdi>. סביבת CI: ‏<code>ubuntu-latest</code>.</p>
+</section>
+
+<!-- 7 -->
+<section id="req">
+  <h2><span class="n">7</span>דרישות ומטריצת עקיבות</h2>
+  <p class="section-intro">הדרישות שהבדיקות מאמתות, ואיזו בדיקה מכסה כל דרישה. כך אפשר לוודא שאין דרישה בלי בדיקה.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>מזהה</th><th>דרישה</th></tr></thead>
+      <tbody>
+        <tr><td class="ltr">R1</td><td>בקשה לפוסט קיים מחזירה תשובה מוצלחת (200).</td></tr>
+        <tr><td class="ltr">R2</td><td>פוסט מכיל את כל שדות החובה, עם הערכים הנכונים.</td></tr>
+        <tr><td class="ltr">R3</td><td>מבנה הפוסט תואם לחוזה המוגדר (JSON Schema).</td></tr>
+        <tr><td class="ltr">R4</td><td>אימות החוזה מזהה פוסט שחסר בו שדה חובה.</td></tr>
+        <tr><td class="ltr">R5</td><td>יצירת פוסט מחזירה 201 ואת הנתונים שנשלחו.</td></tr>
+        <tr><td class="ltr">R6</td><td>בקשה לפוסט שלא קיים מחזירה 404 (הרחבה).</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="table-wrap mx">
+    <table>
+      <thead><tr><th>מקרה בדיקה</th><th class="ltr">R1</th><th class="ltr">R2</th><th class="ltr">R3</th><th class="ltr">R4</th><th class="ltr">R5</th><th class="ltr">R6</th></tr></thead>
+      <tbody>
+        <tr><td class="ltr">TC-01</td><td class="c">✓</td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="ltr">TC-02</td><td></td><td class="c">✓</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="ltr">TC-03</td><td></td><td></td><td class="c">✓</td><td></td><td></td><td></td></tr>
+        <tr><td class="ltr">TC-04</td><td></td><td></td><td></td><td class="c">✓</td><td></td><td></td></tr>
+        <tr><td class="ltr">TC-05</td><td></td><td></td><td></td><td></td><td class="c">✓</td><td></td></tr>
+        <tr><td class="ltr">TC-06</td><td></td><td></td><td></td><td></td><td></td><td class="c">✓</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 8 -->
+<section id="cases">
+  <h2><span class="n">8</span>מקרי הבדיקה</h2>
+  <p class="section-intro">פירוט מלא של כל בדיקה: מה נשלח, מה בודקים, למה הבדיקה קיימת, והקוד שלה. כל הבדיקות נמצאות במחלקה <code>PostApiTests</code>, ומשתמשות בתשתית מסעיף 5.</p>
+
+  <h3>מחלקת הבדיקות: PostApiTests</h3>
+  <p>המחלקה מקבלת את ה-<code>PostsApiClient</code> מה-Fixture דרך הבנאי, ומחזיקה מאמת סכמה אחד משותף. אלה השדות היחידים שלה. כל בדיקה בה היא Arrange, Act ו-Assert, בלי פרטי HTTP.</p>
+  <details class="code"><summary>שלד המחלקה</summary>
+<pre><code><span class="k">using</span> System.Net;
+<span class="k">using</span> System.Net.Http.Json;
+<span class="k">using</span> ApiTests.Clients;
+<span class="k">using</span> ApiTests.Fixtures;
+<span class="k">using</span> ApiTests.Models;
+<span class="k">using</span> ApiTests.TestData;
+<span class="k">using</span> ApiTests.Validation;
+
+<span class="k">namespace</span> ApiTests.Tests;
+
+<span class="k">public class</span> <span class="t">PostApiTests</span> : <span class="t">IClassFixture</span>&lt;<span class="t">ApiClientFixture</span>&gt;
+{
+    <span class="k">private static readonly</span> <span class="t">JsonSchemaValidator</span> PostSchemaValidator = <span class="k">new</span>(<span class="s">"post.schema.json"</span>);
+    <span class="k">private readonly</span> <span class="t">PostsApiClient</span> _postsClient;
+
+    <span class="k">public</span> PostApiTests(<span class="t">ApiClientFixture</span> fixture)
+    {
+        _postsClient = fixture.PostsClient;
+    }
+
+    <span class="c">// TC-01 ... TC-06 below</span>
+}</code></pre>
+  </details>
+
+  <!-- TC-01 -->
+  <article class="tc">
+    <div class="tc-head">
+      <span class="tc-id">TC-01</span>
+      <h3 class="tc-title">קריאת פוסט קיים מחזירה 200</h3>
+      <span class="tag">חיובית</span>
+      <span class="st done">מומשה</span>
+      <div class="tc-method">GetPost_ReturnsOk()</div>
+    </div>
+    <div class="tc-body">
+      <dl>
+        <dt>מטרה</dt><dd>לוודא שה-endpoint זמין ומחזיר תשובה מוצלחת לבקשה תקינה. זו בדיקת ה-<bdi dir="ltr">happy path</bdi> הבסיסית.</dd>
+        <dt>בקשה</dt><dd><span class="req"><span class="verb get">GET</span>/posts/1</span></dd>
+        <dt>מחלקות בשימוש</dt><dd><code>PostsApiClient</code>, <code>PostTestData</code></dd>
+        <dt>שלבים</dt><dd><ol class="steps"><li>קריאה ל-<code>GetPostByIdAsync</code> עם <code>ExistingPostId</code>.</li><li>קריאת קוד הסטטוס מהתשובה.</li></ol></dd>
+        <dt>תוצאה צפויה</dt><dd>קוד סטטוס <b>200 OK</b>.</dd>
+        <dt>Assert</dt><dd><code>Assert.Equal(HttpStatusCode.OK, response.StatusCode)</code></dd>
+        <dt>בדיקת אמינות</dt><dd>להריץ פעם אחת עם ערך צפוי שגוי (<code>NotFound</code>), ולוודא שהבדיקה נכשלת עם הודעה ברורה שמציגה Expected ו-Actual. מבוצע לפני המיזוג ל-<code>main</code>.</dd>
+      </dl>
+      <p class="why"><b>מה השתנה מהגרסה הראשונה:</b> במקור הבדיקה שלחה בעצמה <code>client.GetAsync("posts/1")</code>. ב-PR #4 היא עברה לעבוד דרך ה-Client, והמספר 1 קיבל שם. התוצאה הנבדקת לא השתנתה.</p>
+      <details class="code"><summary>הקוד</summary>
+<pre><code>[<span class="t">Fact</span>]
+<span class="k">public async</span> <span class="t">Task</span> GetPost_ReturnsOk()
+{
+    <span class="c">// Act</span>
+    <span class="t">HttpResponseMessage</span> response = <span class="k">await</span> _postsClient.GetPostByIdAsync(<span class="t">PostTestData</span>.ExistingPostId);
+
+    <span class="c">// Assert</span>
+    <span class="t">Assert</span>.Equal(<span class="t">HttpStatusCode</span>.OK, response.StatusCode);
+}</code></pre>
+      </details>
+    </div>
+  </article>
+
+  <!-- TC-02 -->
+  <article class="tc">
+    <div class="tc-head">
+      <span class="tc-id">TC-02</span>
+      <h3 class="tc-title">פוסט מכיל את שדות החובה עם ערכים נכונים</h3>
+      <span class="tag">חיובית</span>
+      <span class="st done">מומשה</span>
+      <div class="tc-method">GetPost_ContainsRequiredFields()</div>
+    </div>
+    <div class="tc-body">
+      <dl>
+        <dt>מטרה</dt><dd>לוודא שהתשובה לא רק "הצליחה", אלא מכילה את המידע הנכון.</dd>
+        <dt>בקשה</dt><dd><span class="req"><span class="verb get">GET</span>/posts/1</span></dd>
+        <dt>מחלקות בשימוש</dt><dd><code>PostsApiClient</code>, <code>Post</code>, <code>PostTestData</code></dd>
+        <dt>שלבים</dt><dd><ol class="steps"><li>קריאה ל-<code>GetPostByIdAsync</code>.</li><li>המרת גוף התשובה למודל <code>Post</code> עם <code>ReadFromJsonAsync</code>.</li><li>בדיקה של כל שדה במודל.</li></ol></dd>
+        <dt>תוצאה צפויה</dt><dd>‏<code>id</code> שווה ל-1, כמו שביקשנו. <code>userId</code> חיובי. <code>title</code> ו-<code>body</code> אינם ריקים.</dd>
+        <dt>Assert</dt><dd>‏<code>Assert.Equal</code> על <code>Id</code>, ו-<code>Assert.False(string.IsNullOrWhiteSpace(...))</code> על המחרוזות.</dd>
+      </dl>
+      <p class="why"><b>למה לבדוק את <code>id</code>:</b> בדיקה שמוודאת רק שהשדה קיים תעבור גם אם השרת החזיר פוסט אחר. בדיקת הערך מוודאת שקיבלנו בדיוק את מה שביקשנו.</p>
+      <p class="why"><b>למה מודל ולא <code>JsonDocument</code>:</b> אם שדה חסר בתשובה, המאפיין במודל יקבל ערך ברירת מחדל (<code>null</code> או 0), וה-Assert עליו ייכשל. כך הבדיקה קצרה וקריאה. בדיקת הנוכחות המדויקת של כל שדה, כולל הטיפוס, היא התפקיד של TC-03.</p>
+      <details class="code"><summary>הקוד</summary>
+<pre><code>[<span class="t">Fact</span>]
+<span class="k">public async</span> <span class="t">Task</span> GetPost_ContainsRequiredFields()
+{
+    <span class="c">// Act</span>
+    <span class="t">HttpResponseMessage</span> response = <span class="k">await</span> _postsClient.GetPostByIdAsync(<span class="t">PostTestData</span>.ExistingPostId);
+    <span class="t">Post</span>? post = <span class="k">await</span> response.Content.ReadFromJsonAsync&lt;<span class="t">Post</span>&gt;();
+
+    <span class="c">// Assert</span>
+    <span class="t">Assert</span>.Equal(<span class="t">HttpStatusCode</span>.OK, response.StatusCode);
+    <span class="t">Assert</span>.NotNull(post);
+    <span class="t">Assert</span>.Equal(<span class="t">PostTestData</span>.ExistingPostId, post.Id);
+    <span class="t">Assert</span>.True(post.UserId &gt; <span class="s">0</span>);
+    <span class="t">Assert</span>.False(<span class="k">string</span>.IsNullOrWhiteSpace(post.Title));
+    <span class="t">Assert</span>.False(<span class="k">string</span>.IsNullOrWhiteSpace(post.Body));
+}</code></pre>
+      </details>
+    </div>
+  </article>
+
+  <!-- TC-03 -->
+  <article class="tc">
+    <div class="tc-head">
+      <span class="tc-id">TC-03</span>
+      <h3 class="tc-title">פוסט תואם לחוזה (JSON Schema)</h3>
+      <span class="tag contract">חוזה</span>
+      <span class="st done">מומשה</span>
+      <div class="tc-method">GetPost_MatchesSchema()</div>
+    </div>
+    <div class="tc-body">
+      <dl>
+        <dt>מטרה</dt><dd>לוודא שמבנה התשובה כולו תואם להגדרה: שדות החובה קיימים, ולכל שדה יש את הטיפוס הנכון.</dd>
+        <dt>בקשה</dt><dd><span class="req"><span class="verb get">GET</span>/posts/1</span></dd>
+        <dt>קלט נוסף</dt><dd>קובץ הסכמה <code>Schemas/post.schema.json</code> (פירוט בסעיף 9).</dd>
+        <dt>מחלקות בשימוש</dt><dd><code>PostsApiClient</code>, <code>JsonSchemaValidator</code>, <code>PostTestData</code></dd>
+        <dt>שלבים</dt><dd><ol class="steps"><li>קריאה ל-<code>GetPostByIdAsync</code> וקריאת הגוף כמחרוזת.</li><li>אימות המחרוזת עם <code>PostSchemaValidator.Validate</code>.</li></ol></dd>
+        <dt>תוצאה צפויה</dt><dd>תוצאת האימות תקינה (<code>IsValid</code> הוא <code>true</code>).</dd>
+      </dl>
+      <p class="why"><b>ההבדל מ-TC-02:</b> ‏TC-02 בודק שדות שבחרנו לבדוק. הסכמה בודקת את כל המבנה, כולל טיפוסים. למשל, אם <code>id</code> יחזור פתאום כמחרוזת <code>"1"</code> במקום מספר, TC-03 יתפוס את זה. זה נקרא <b>Contract Testing</b>.</p>
+      <p class="why"><b>למה הגוף נקרא כמחרוזת ולא כמודל:</b> המרה למודל כבר "מתקנת" את הנתונים, למשל מתעלמת משדות מיותרים. הסכמה צריכה לראות את ה-JSON בדיוק כפי שהשרת שלח אותו.</p>
+      <p class="why"><b>הודעת הכישלון:</b> הפרמטר השני של <code>Assert.True</code> מציג את רשימת שגיאות האימות, כך שבדוח רואים מיד איזה שדה שבור.</p>
+      <details class="code"><summary>הקוד</summary>
+<pre><code>[<span class="t">Fact</span>]
+<span class="k">public async</span> <span class="t">Task</span> GetPost_MatchesSchema()
+{
+    <span class="c">// Arrange</span>
+    <span class="t">HttpResponseMessage</span> response = <span class="k">await</span> _postsClient.GetPostByIdAsync(<span class="t">PostTestData</span>.ExistingPostId);
+    <span class="k">string</span> json = <span class="k">await</span> response.Content.ReadAsStringAsync();
+
+    <span class="c">// Act</span>
+    <span class="t">SchemaValidationResult</span> result = PostSchemaValidator.Validate(json);
+
+    <span class="c">// Assert</span>
+    <span class="t">Assert</span>.True(result.IsValid, <span class="k">string</span>.Join(<span class="t">Environment</span>.NewLine, result.Errors));
+}</code></pre>
+      </details>
+    </div>
+  </article>
+
+  <!-- TC-04 -->
+  <article class="tc">
+    <div class="tc-head">
+      <span class="tc-id">TC-04</span>
+      <h3 class="tc-title">פוסט בלי שדה חובה נכשל באימות החוזה</h3>
+      <span class="tag neg">שלילית</span>
+      <span class="st done">מומשה</span>
+      <div class="tc-method">PostMissingTitle_FailsSchema()</div>
+    </div>
+    <div class="tc-body">
+      <dl>
+        <dt>מטרה</dt><dd>להוכיח שאימות החוזה באמת תופס תשובה שבורה, ולא עובר תמיד.</dd>
+        <dt>בקשה</dt><dd><span class="req"><span class="verb local">LOCAL</span>no network call</span><br><span style="font-size:15px;color:var(--muted)">הבדיקה לא פונה ל-API. היא בודקת את מנגנון האימות עצמו, על JSON שנבנה בקוד.</span></dd>
+        <dt>קלט</dt><dd>
+<pre><code>{ <span class="s">"userId"</span>: <span class="s">1</span>, <span class="s">"id"</span>: <span class="s">1</span>, <span class="s">"body"</span>: <span class="s">"Sample body"</span> }   <span class="c">// "title" is missing</span></code></pre></dd>
+        <dt>מחלקות בשימוש</dt><dd><code>JsonSchemaValidator</code>, <code>PostTestData</code></dd>
+        <dt>שלבים</dt><dd><ol class="steps"><li>קבלת JSON בלי <code>title</code> מ-<code>PostTestData.PostJsonMissingTitle()</code>.</li><li>אימות מול אותה סכמה של TC-03.</li></ol></dd>
+        <dt>תוצאה צפויה</dt><dd>תוצאת האימות <b>לא תקינה</b>, ואחת השגיאות מזכירה את השדה <code>title</code>.</dd>
+      </dl>
+      <p class="why"><b>למה זה חשוב:</b> אם הסכמה הוגדרה לא נכון, למשל בלי <code>required</code>, ‏TC-03 עדיין יעבור, ואף אחד לא יידע שהאימות לא עושה כלום. ‏TC-04 סוגר את הפער הזה.</p>
+      <p class="why"><b>למה הבדיקה סינכרונית:</b> אין בה קריאת רשת, ולכן היא <code>void</code> ולא <code>async Task</code>. היא רצה גם בלי אינטרנט.</p>
+      <details class="code"><summary>הקוד</summary>
+<pre><code>[<span class="t">Fact</span>]
+<span class="k">public void</span> PostMissingTitle_FailsSchema()
+{
+    <span class="c">// Arrange</span>
+    <span class="k">string</span> brokenPostJson = <span class="t">PostTestData</span>.PostJsonMissingTitle();
+
+    <span class="c">// Act</span>
+    <span class="t">SchemaValidationResult</span> result = PostSchemaValidator.Validate(brokenPostJson);
+
+    <span class="c">// Assert</span>
+    <span class="t">Assert</span>.False(result.IsValid);
+    <span class="t">Assert</span>.Contains(result.Errors, error =&gt; error.Contains(<span class="s">"title"</span>));
+}</code></pre>
+      </details>
+    </div>
+  </article>
+
+  <!-- TC-05 -->
+  <article class="tc">
+    <div class="tc-head">
+      <span class="tc-id">TC-05</span>
+      <h3 class="tc-title">יצירת פוסט מחזירה 201 ואת הנתונים שנשלחו</h3>
+      <span class="tag">חיובית</span>
+      <span class="st done">מומשה</span>
+      <div class="tc-method">CreatePost_ReturnsCreated()</div>
+    </div>
+    <div class="tc-body">
+      <dl>
+        <dt>מטרה</dt><dd>לוודא שיצירת משאב חדש מחזירה את קוד הסטטוס הנכון, ושהשרת קיבל את הנתונים כפי שנשלחו.</dd>
+        <dt>בקשה</dt><dd><span class="req"><span class="verb post">POST</span>/posts</span>
+<pre><code>{ <span class="s">"userId"</span>: <span class="s">1</span>, <span class="s">"title"</span>: <span class="s">"Test title"</span>, <span class="s">"body"</span>: <span class="s">"Test body"</span> }</code></pre></dd>
+        <dt>מחלקות בשימוש</dt><dd><code>PostsApiClient</code>, <code>CreatePostRequest</code>, <code>Post</code>, <code>PostTestData</code></dd>
+        <dt>שלבים</dt><dd><ol class="steps"><li>קבלת בקשה תקינה מ-<code>PostTestData.NewValidPost()</code>.</li><li>שליחה עם <code>CreatePostAsync</code>.</li><li>בדיקת הסטטוס, והמרת התשובה ל-<code>Post</code>.</li></ol></dd>
+        <dt>תוצאה צפויה</dt><dd>קוד סטטוס <b>201 Created</b>. הערכים של <code>title</code>, <code>body</code> ו-<code>userId</code> בתשובה זהים למה שנשלח, ובתשובה יש <code>id</code> חיובי.</dd>
+      </dl>
+      <p class="why"><b>השוואה לבקשה, לא לערכים קבועים:</b> ה-Assert משווה ל-<code>request.Title</code> ולא למחרוזת <code>"Test title"</code>. אם נתוני הבדיקה ישתנו ב-<code>PostTestData</code>, הבדיקה תמשיך לעבוד.</p>
+      <p class="why"><b>מגבלה ידועה:</b> השירות מדמה יצירה ולא שומר את הפוסט. לכן הבדיקה לא שולחת אחר כך GET כדי לוודא שהפוסט נשמר. ב-API אמיתי זה היה חלק מהבדיקה.</p>
+      <details class="code"><summary>הקוד</summary>
+<pre><code>[<span class="t">Fact</span>]
+<span class="k">public async</span> <span class="t">Task</span> CreatePost_ReturnsCreated()
+{
+    <span class="c">// Arrange</span>
+    <span class="t">CreatePostRequest</span> request = <span class="t">PostTestData</span>.NewValidPost();
+
+    <span class="c">// Act</span>
+    <span class="t">HttpResponseMessage</span> response = <span class="k">await</span> _postsClient.CreatePostAsync(request);
+    <span class="t">Post</span>? created = <span class="k">await</span> response.Content.ReadFromJsonAsync&lt;<span class="t">Post</span>&gt;();
+
+    <span class="c">// Assert</span>
+    <span class="t">Assert</span>.Equal(<span class="t">HttpStatusCode</span>.Created, response.StatusCode);
+    <span class="t">Assert</span>.NotNull(created);
+    <span class="t">Assert</span>.Equal(request.Title, created.Title);
+    <span class="t">Assert</span>.Equal(request.Body, created.Body);
+    <span class="t">Assert</span>.Equal(request.UserId, created.UserId);
+    <span class="t">Assert</span>.True(created.Id &gt; <span class="s">0</span>);
+}</code></pre>
+      </details>
+    </div>
+  </article>
+
+  <!-- TC-06 -->
+  <article class="tc">
+    <div class="tc-head">
+      <span class="tc-id">TC-06</span>
+      <h3 class="tc-title">קריאת פוסט שלא קיים מחזירה 404</h3>
+      <span class="tag neg">שלילית</span>
+      <span class="st done">מומשה</span>
+      <div class="tc-method">GetNonExistingPost_ReturnsNotFound()</div>
+    </div>
+    <div class="tc-body">
+      <dl>
+        <dt>מטרה</dt><dd>לוודא שה-API מטפל נכון בבקשה למשאב שלא קיים, ולא מחזיר 200 עם תוכן ריק.</dd>
+        <dt>בקשה</dt><dd><span class="req"><span class="verb get">GET</span>/posts/99999</span></dd>
+        <dt>מחלקות בשימוש</dt><dd><code>PostsApiClient</code>, <code>PostTestData</code></dd>
+        <dt>תוצאה צפויה</dt><dd>קוד סטטוס <b>404 Not Found</b>.</dd>
+      </dl>
+      <p class="why"><b>הוכחה לעיצוב ה-Client:</b> הבדיקה הזו אפשרית רק כי <code>PostsApiClient</code> מחזיר את התשובה כמו שהיא, ולא זורק שגיאה על סטטוס לא מוצלח (ראו C-03).</p>
+      <details class="code"><summary>הקוד</summary>
+<pre><code>[<span class="t">Fact</span>]
+<span class="k">public async</span> <span class="t">Task</span> GetNonExistingPost_ReturnsNotFound()
+{
+    <span class="c">// Act</span>
+    <span class="t">HttpResponseMessage</span> response = <span class="k">await</span> _postsClient.GetPostByIdAsync(<span class="t">PostTestData</span>.NonExistingPostId);
+
+    <span class="c">// Assert</span>
+    <span class="t">Assert</span>.Equal(<span class="t">HttpStatusCode</span>.NotFound, response.StatusCode);
+}</code></pre>
+      </details>
+    </div>
+  </article>
+</section>
+
+<!-- 9 -->
+<section id="schema">
+  <h2><span class="n">9</span>חוזה JSON Schema</h2>
+  <p class="section-intro">הקובץ <code>Schemas/post.schema.json</code> מגדיר מהו פוסט תקין. הוא משמש את TC-03 ואת TC-04, דרך <code>JsonSchemaValidator</code>.</p>
+<pre><code>{
+  <span class="s">"$schema"</span>: <span class="s">"https://json-schema.org/draft/2020-12/schema"</span>,
+  <span class="s">"type"</span>: <span class="s">"object"</span>,
+  <span class="s">"required"</span>: [<span class="s">"userId"</span>, <span class="s">"id"</span>, <span class="s">"title"</span>, <span class="s">"body"</span>],
+  <span class="s">"properties"</span>: {
+    <span class="s">"userId"</span>: { <span class="s">"type"</span>: <span class="s">"integer"</span> },
+    <span class="s">"id"</span>:     { <span class="s">"type"</span>: <span class="s">"integer"</span> },
+    <span class="s">"title"</span>:  { <span class="s">"type"</span>: <span class="s">"string"</span> },
+    <span class="s">"body"</span>:   { <span class="s">"type"</span>: <span class="s">"string"</span> }
+  }
+}</code></pre>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>חלק בסכמה</th><th>משמעות</th></tr></thead>
+      <tbody>
+        <tr><td class="ltr">$schema</td><td>גרסת התקן של JSON Schema שהקובץ כתוב לפיו (2020-12).</td></tr>
+        <tr><td class="ltr">"type": "object"</td><td>התשובה חייבת להיות אובייקט, ולא מערך או ערך בודד.</td></tr>
+        <tr><td class="ltr">required</td><td>רשימת שדות החובה. אם אחד מהם חסר, האימות נכשל. זה מה ש-TC-04 בודק.</td></tr>
+        <tr><td class="ltr">properties</td><td>הטיפוס של כל שדה: <code>integer</code> למספר שלם, ו-<code>string</code> למחרוזת.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="why"><b>למה אין <code>"additionalProperties": false</code>:</b> ההגדרה הזו הייתה מכשילה את הבדיקה בכל פעם שהשרת מוסיף שדה חדש. הוספת שדה היא שינוי תואם-לאחור, שלא שובר אף צרכן, ולכן היא לא סיבה לכישלון. הסכמה נועלת את מה שצרכנים מסתמכים עליו, ולא יותר.</p>
+  <p>הקובץ נמצא בתיקייה <code>Schemas/</code>, ומוגדר ב-<code>ApiTests.csproj</code> להעתקה לתיקיית הפלט. <code>JsonSchemaValidator</code> מחפש אותו שם, דרך <code>AppContext.BaseDirectory</code>:</p>
+<pre><code>&lt;<span class="t">ItemGroup</span>&gt;
+  &lt;<span class="t">None</span> Update=<span class="s">"Schemas\post.schema.json"</span> CopyToOutputDirectory=<span class="s">"PreserveNewest"</span> /&gt;
+&lt;/<span class="t">ItemGroup</span>&gt;</code></pre>
+</section>
+
+<!-- 10 -->
+<section id="data">
+  <h2><span class="n">10</span>נתוני בדיקה</h2>
+  <p class="section-intro">מאיפה מגיעים הנתונים, איפה הם מוגדרים בקוד, ולמה הם בטוחים לפרסום.</p>
+  <ul class="plain">
+    <li><b>נתונים מהשירות:</b> פוסט מספר 1 של JSONPlaceholder. הנתונים קבועים ולא משתנים בין הרצות, ולכן אפשר לצפות לערכים ידועים.</li>
+    <li><b>נתונים שנבנים בקוד:</b> הפוסט החדש ב-TC-05 והפוסט השבור ב-TC-04. שניהם בדויים לחלוטין.</li>
+    <li><b>מקום אחד בקוד:</b> כל הנתונים האלה מוגדרים ב-<code>PostTestData</code> (C-07), עם שם לכל ערך. אין מספרים או מחרוזות "קסם" בתוך הבדיקות.</li>
+    <li><b>מדיניות:</b> אין בפרויקט נתונים, קוד או סכמות ממערכות אמיתיות. כל הנתונים ציבוריים או בדויים, ולכן הריפו יכול להיות ציבורי.</li>
+  </ul>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th class="ltr">PostTestData</th><th>ערך</th><th>בשימוש ב-</th></tr></thead>
+      <tbody>
+        <tr><td class="ltr">ExistingPostId</td><td><code>1</code></td><td>TC-01, TC-02, TC-03</td></tr>
+        <tr><td class="ltr">NonExistingPostId</td><td><code>99999</code></td><td>TC-06</td></tr>
+        <tr><td class="ltr">NewValidPost()</td><td>בקשת יצירה תקינה</td><td>TC-05</td></tr>
+        <tr><td class="ltr">PostJsonMissingTitle()</td><td>JSON בלי <code>title</code></td><td>TC-04</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 11 -->
+<section id="risks">
+  <h2><span class="n">11</span>סיכונים ומגבלות</h2>
+  <p class="section-intro">מה יכול לגרום לבדיקות להיכשל בלי שיש באג, ואיך מתמודדים עם זה.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>סיכון</th><th>רמה</th><th>השפעה</th><th>התמודדות</th></tr></thead>
+      <tbody>
+        <tr><td>השירות החיצוני לא זמין</td><td><span class="risk-level m">בינונית</span></td><td>בדיקות TC-01, 02, 03, 05 ו-06 ייכשלו בלי באג בקוד</td><td>הודעת הכישלון מבחינה בין שגיאת רשת לבין תשובה שגויה. ה-timeout מוגדר ב-<code>ApiSettings</code>, כך שבדיקה לא נתקעת. בהמשך אפשר להוסיף Mock מקומי.</td></tr>
+        <tr><td>השירות לא שומר נתונים</td><td><span class="risk-level l">נמוכה</span></td><td>אי אפשר לבדוק יצירה ואז קריאה של אותו פוסט</td><td>מתועד כמגבלה ב-TC-05. נבדק רק מה שהשירות באמת מחזיר.</td></tr>
+        <tr><td>תלות ברשת בזמן CI</td><td><span class="risk-level m">בינונית</span></td><td>ריצה כושלת ב-GitHub Actions בגלל תקלת רשת</td><td>הרצה חוזרת של ה-workflow. TC-04 לא תלוי ברשת ותמיד רץ.</td></tr>
+        <tr><td>שינוי בממשק של JsonSchema.Net</td><td><span class="risk-level l">נמוכה</span></td><td>הקוד לא יתקמפל אחרי עדכון החבילה</td><td>הגרסה נעולה ל-9.4.0 ב-<code>.csproj</code>, וכל השימוש בספרייה מרוכז ב-<code>JsonSchemaValidator</code>. עדכון דורש שינוי בקובץ אחד.</td></tr>
+        <tr><td>מיצוי sockets</td><td><span class="risk-level l">נמוכה</span></td><td>שגיאות חיבור כשיש הרבה בדיקות</td><td><code>HttpClient</code> אחד משותף דרך <code>ApiClientFixture</code>, ששוחרר בסוף.</td></tr>
+        <tr><td>מעבר לסביבה אחרת</td><td><span class="risk-level l">נמוכה</span></td><td>כתובת קשיחה בקוד מחייבת שינוי בהרבה מקומות</td><td>הכתובת מוגדרת רק ב-<code>ApiSettings.BaseUrl</code>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 12 -->
+<section id="criteria">
+  <h2><span class="n">12</span>קריטריוני כניסה ויציאה</h2>
+  <p class="section-intro">מתי אפשר להתחיל להריץ, ומתי הסוויטה נחשבת גמורה.</p>
+  <div class="cards2">
+    <div class="box">
+      <h3>קריטריוני כניסה</h3>
+      <ul>
+        <li>הפרויקט נבנה ללא שגיאות ואזהרות nullable (<code>dotnet build</code>).</li>
+        <li>יש גישה לרשת ול-<code>jsonplaceholder.typicode.com</code>.</li>
+        <li>קובץ הסכמה קיים ב-<code>Schemas/</code> ומועתק לתיקיית הפלט.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>קריטריוני יציאה</h3>
+      <ul>
+        <li>כל מקרי הבדיקה TC-01 עד TC-05 מומשו ועוברים.</li>
+        <li>אין בדיקות מדולגות (Skipped).</li>
+        <li>כל בדיקה נראתה נכשלת לפחות פעם אחת כשהתנאי שלה הופר.</li>
+        <li>אין בגוף בדיקה URL, ‏<code>HttpClient</code> או פענוח JSON ידני.</li>
+        <li>הבדיקות עוברות גם ב-CI, לא רק מקומית.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="why"><b>מצב נוכחי:</b> כל קריטריוני היציאה מתקיימים. כל ששת מקרי הבדיקה, כולל TC-06, מומשו ועוברים מקומית וב-GitHub Actions. כל אחד מהם נראה נכשל בבדיקת אמינות לפני המיזוג, עם הודעה שמציגה Expected ו-Actual.</p>
+</section>
+
+<!-- 13 -->
+<section id="flow">
+  <h2><span class="n">13</span>תהליך עבודה ו-CI</h2>
+  <p class="section-intro">כל שינוי נבנה בענף נפרד, ונכנס לענף הראשי רק כשהוא גמור ועובר.</p>
+  <div class="flow">
+    <div><b>ענף לכל שינוי</b>למשל <code>test/get-post-fields</code></div>
+    <div><b>פיתוח והרצה</b>commits קטנים ו-push לגיבוי</div>
+    <div><b>Pull Request</b>עם תיאור הבדיקה, וה-CI רץ אוטומטית</div>
+    <div><b>Squash and merge</b>commit אחד נקי ב-<code>main</code></div>
+    <div><b>מחיקת הענף</b>אחרי המיזוג</div>
+  </div>
+  <p>כך ב-<code>main</code> יש היסטוריה מסודרת, commit אחד לכל שינוי, וכל שינוי מתועד ב-Pull Request. סדר הענפים המתוכנן מופיע בסעיף 15.</p>
+  <h3>CI ב-GitHub Actions</h3>
+  <p>הקובץ <code>.github/workflows/tests.yml</code> מריץ את כל הבדיקות בכל Pull Request ובכל push ל-<code>main</code>:</p>
+<pre><code><span class="k">name</span>: tests
+<span class="k">on</span>:
+  <span class="k">push</span>:
+    <span class="k">branches</span>: [main]
+  <span class="k">pull_request</span>:
+<span class="k">jobs</span>:
+  <span class="k">test</span>:
+    <span class="k">runs-on</span>: ubuntu-latest
+    <span class="k">steps</span>:
+      - <span class="k">uses</span>: actions/checkout@v5
+
+      - <span class="k">uses</span>: actions/setup-dotnet@v5
+        <span class="k">with</span>:
+          <span class="k">dotnet-version</span>: <span class="s">'10.0.x'</span>
+
+      - <span class="k">name</span>: Run tests
+        <span class="k">run</span>: dotnet test ApiTests --logger <span class="s">"console;verbosity=normal"</span></code></pre>
+  <p class="why"><b>מה זה נותן בפועל:</b> בכל PR מופיעה הבדיקה <code>tests</code>, עם ✅ או ❌, עוד לפני המיזוג. ה-<code>--logger</code> מדפיס ביומן הריצה את השם והתוצאה של כל בדיקה, כך שכשמשהו נכשל רואים מיד איזו בדיקה נכשלה.</p>
+</section>
+
+<!-- 14 -->
+<section id="run">
+  <h2><span class="n">14</span>מבנה הפרויקט והרצה</h2>
+  <p class="section-intro">איפה כל דבר נמצא, ואיך מריצים את הבדיקות. כל תיקייה היא שכבה מסעיף 4.</p>
+<pre><code>csharp-api-tests/
+├── ApiTests/
+│   ├── ApiTests.csproj               <span class="c"># project settings and NuGet packages</span>
+│   ├── Configuration/
+│   │   └── ApiSettings.cs            <span class="c"># base URL and timeout (C-01)</span>
+│   ├── Models/
+│   │   ├── Post.cs                   <span class="c"># response model (C-02)</span>
+│   │   └── CreatePostRequest.cs      <span class="c"># request model (C-02)</span>
+│   ├── Clients/
+│   │   ├── ApiClientBase.cs          <span class="c"># shared HTTP plumbing (C-03)</span>
+│   │   └── PostsApiClient.cs         <span class="c"># /posts actions (C-04)</span>
+│   ├── Fixtures/
+│   │   └── ApiClientFixture.cs       <span class="c"># one shared HttpClient (C-05)</span>
+│   ├── Validation/
+│   │   ├── JsonSchemaValidator.cs    <span class="c"># wraps JsonSchema.Net (C-06)</span>
+│   │   └── SchemaValidationResult.cs <span class="c"># library-free result (C-06)</span>
+│   ├── TestData/
+│   │   └── PostTestData.cs           <span class="c"># named test input (C-07)</span>
+│   ├── Schemas/
+│   │   └── post.schema.json          <span class="c"># JSON Schema contract (section 9)</span>
+│   └── Tests/
+│       └── PostApiTests.cs           <span class="c"># TC-01 ... TC-06</span>
+├── .github/workflows/
+│   └── tests.yml                     <span class="c"># CI pipeline</span>
+├── .gitignore                        <span class="c"># excludes bin/, obj/, .vs/</span>
+└── README.md</code></pre>
+  <p class="why"><b>Namespace לפי תיקייה:</b> כל קובץ מצהיר על namespace שתואם לתיקייה שלו, למשל <code>ApiTests.Clients</code>. כך ה-<code>using</code> בראש קובץ הבדיקות מראה בדיוק באילו שכבות הוא תלוי.</p>
+  <h3>הרצה מקומית</h3>
+  <p>דרישה מוקדמת: <bdi dir="ltr">.NET 10 SDK</bdi>.</p>
+<pre><code>git clone https://github.com/maya5768/csharp-api-tests.git
+cd csharp-api-tests
+dotnet test ApiTests</code></pre>
+  <p>התוצאה הצפויה: שורת סיכום בסגנון <code>Test summary: total: 6, failed: 0, succeeded: 6</code>.</p>
+  <h3>הרצה של חלק מהבדיקות</h3>
+<pre><code><span class="c"># a single test</span>
+dotnet test ApiTests --filter <span class="s">"FullyQualifiedName~PostApiTests.GetPost_MatchesSchema"</span>
+
+<span class="c"># every test whose name starts with GetPost</span>
+dotnet test ApiTests --filter <span class="s">"FullyQualifiedName~GetPost"</span>
+
+<span class="c"># detailed output, including the name of each test</span>
+dotnet test ApiTests --logger <span class="s">"console;verbosity=detailed"</span></code></pre>
+</section>
+
+<!-- 15 -->
+<section id="roadmap">
+  <h2><span class="n">15</span>מפת דרכים למימוש</h2>
+  <p class="section-intro">הסדר שבו הקוד נכתב. כל שורה היא ענף ו-Pull Request אחד, לפי התהליך בסעיף 13. שמות הענפים לפי מוסכמת הקידומות ב-<code>git-workflow.html</code>: <code>test/</code> לבדיקה חדשה, ו-<code>feature/</code> להרחבת תשתית. כל ענף נפתח מתוך <code>main</code>. התשתית נבנתה קודם, כדי שכל בדיקה חדשה תיכתב מההתחלה בארכיטקטורה הנכונה.</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th class="ltr">ענף</th><th>מה נכנס</th><th>סטטוס</th></tr></thead>
+      <tbody>
+        <tr><td class="ltr">1</td><td class="ltr">feature/test-architecture</td><td><code>ApiSettings</code>, המודלים, <code>ApiClientBase</code>, <code>PostsApiClient</code>, <code>ApiClientFixture</code>, ‏<code>PostTestData</code>. העברת TC-01 לתשתית החדשה בלי לשנות את מה שהיא בודקת.</td><td><span class="st done">מוזג, PR #4</span></td></tr>
+        <tr><td class="ltr">2</td><td class="ltr">test/get-post-fields</td><td>TC-02</td><td><span class="st done">מוזג, PR #5</span></td></tr>
+        <tr><td class="ltr">3</td><td class="ltr">test/post-schema</td><td><code>Schemas/post.schema.json</code>, ‏<code>JsonSchemaValidator</code>, ‏TC-03 ו-TC-04 יחד, כי TC-04 בודקת את אותו מנגנון</td><td><span class="st done">מוזג, PR #6</span></td></tr>
+        <tr><td class="ltr">4</td><td class="ltr">test/create-post</td><td>TC-05</td><td><span class="st done">מוזג, PR #7</span></td></tr>
+        <tr><td class="ltr">5</td><td class="ltr">feature/github-actions-ci</td><td><code>.github/workflows/tests.yml</code></td><td><span class="st done">מוזג, PR #8</span></td></tr>
+        <tr><td class="ltr">6</td><td class="ltr">test/get-post-not-found</td><td>TC-06</td><td><span class="st done">מוזג, PR #9</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="why"><b>למה התשתית קודם:</b> אם TC-02 עד TC-05 היו נכתבות בסגנון הישן ורק אחר כך עוברות לשכבות, כל בדיקה הייתה נכתבת פעמיים. בנוסף, ההעברה של TC-01 לבדה הראתה שהתשתית עובדת, לפני שהוספנו עליה בדיקות. בפועל, ענפים 2, 4 ו-6 שינו קובץ אחד בלבד, כי כל מה שהם צריכים כבר היה קיים.</p>
+  <p class="why"><b>CI על כל PR:</b> מאז ענף 5, כל Pull Request מריץ את הבדיקות ב-GitHub Actions לפני המיזוג. PR #9 היה הראשון שהציג "1 check passed" עוד לפני שמוזג.</p>
+</section>
+
+<!-- 16 -->
+<section id="next">
+  <h2><span class="n">16</span>הרחבות אפשריות</h2>
+  <p class="section-intro">כיווני המשך, לפי סדר העדיפות, ואיפה כל אחד נכנס בארכיטקטורה.</p>
+  <ul class="plain">
+    <li><b>בדיקות מבוססות נתונים:</b> ‏<code>[Theory]</code> עם <code>[InlineData]</code>, כדי להריץ את TC-02 על כמה מזהי פוסט בלי לשכפל קוד. המזהים יתווספו ל-<code>PostTestData</code>.</li>
+    <li><b>שאר פעולות ה-CRUD:</b> ‏<code>PUT</code>, ‏<code>PATCH</code> ו-<code>DELETE</code>, כמתודות חדשות ב-<code>PostsApiClient</code> וב-<code>ApiClientBase</code>.</li>
+    <li><b>משאבים נוספים:</b> ‏<code>/comments</code> ו-<code>/users</code>, כל אחד עם Client משלו שיורש מ-<code>ApiClientBase</code>, ומחלקת בדיקות משלו.</li>
+    <li><b>הגדרות לפי סביבה:</b> קריאת <code>ApiSettings</code> מ-<code>appsettings.json</code> או ממשתני סביבה.</li>
+    <li><b>API משלי:</b> שירות קטן ב-ASP.NET Core עם SQL Server, שבו אפשר לבדוק גם שמירה בפועל.</li>
+    <li><b>בדיקות UI:</b> ‏Playwright for <bdi dir="ltr">.NET</bdi> באותו פרויקט, עם Page Objects קלאסיים לצד ה-API Clients.</li>
+    <li><b>קונטיינר:</b> הרצת הסוויטה ב-Docker, כדי שהסביבה תהיה זהה בכל מחשב.</li>
+  </ul>
+</section>
+
+<footer>מסמך תכנון בדיקות לפרויקט ApiTests, גרסה 2.1. כל הנתונים בפרויקט ציבוריים או בדויים.</footer>
+</main>
+</div>
+</body>
+</html>
