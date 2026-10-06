@@ -25,8 +25,23 @@ dotnet test
 ```
 ApiTests/
 ├── ApiTests.csproj
-└── PostApiTests.cs
+├── Configuration/
+│   └── ApiSettings.cs          # base URL and timeout
+├── Models/
+│   ├── Post.cs                 # response model
+│   └── CreatePostRequest.cs    # request model
+├── Clients/
+│   ├── ApiClientBase.cs        # shared HTTP plumbing
+│   └── PostsApiClient.cs       # /posts actions
+├── Fixtures/
+│   └── ApiClientFixture.cs     # one shared HttpClient per test class
+├── TestData/
+│   └── PostTestData.cs         # named test input
+└── Tests/
+    └── PostApiTests.cs         # test class
 ```
+
+הבדיקות לא שולחות HTTP בעצמן. הן קוראות לפעולות של `PostsApiClient`, בדומה ל-Page Object Model בבדיקות UI.
 
 ## תיעוד מורחב
 
