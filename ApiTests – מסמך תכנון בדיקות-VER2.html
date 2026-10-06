@@ -202,17 +202,17 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
   <p class="lede">סוויטת בדיקות אוטומטיות ל-endpoint ‏<code>/posts</code> של JSONPlaceholder. המסמך מתאר מה נבדק, למה, באיזו שיטה, איך הקוד בנוי, ומה נחשב להצלחה.</p>
   <dl class="meta">
     <div><dt>מחברת</dt><dd>מיה דורני שוקרי</dd></div>
-    <div><dt>גרסת מסמך</dt><dd>2.0, אוקטובר 2026</dd></div>
+    <div><dt>גרסת מסמך</dt><dd>2.1, אוקטובר 2026</dd></div>
     <div><dt>פלטפורמה</dt><dd dir="ltr" style="text-align:right">.NET 10 + xUnit</dd></div>
     <div><dt>ריפו</dt><dd><a href="https://github.com/maya5768/csharp-api-tests" dir="ltr">maya5768/csharp-api-tests</a></dd></div>
   </dl>
 </header>
 
 <div class="summary-strip" aria-label="סיכום">
-  <div><b>6</b><span>מקרי בדיקה מתוכננים</span></div>
-  <div><b>1</b><span>מומש עד כה</span></div>
+  <div><b>6</b><span>מקרי בדיקה</span></div>
+  <div><b>6</b><span>מומשו ועוברים ב-CI</span></div>
   <div><b>4</b><span>רמות אימות</span></div>
-  <div><b>6</b><span>שכבות קוד</span></div>
+  <div><b>7</b><span>שכבות קוד</span></div>
   <div><b>2</b><span>פעולות HTTP: ‏GET ו-POST</span></div>
 </div>
 
@@ -349,10 +349,10 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
     </table>
   </div>
 
-  <h3>מצב נוכחי מול מצב מתוכנן</h3>
+  <h3>לפני ואחרי</h3>
   <div class="cards2">
     <div class="box">
-      <h3>היום: מחלקה אחת עושה הכול</h3>
+      <h3>לפני: מחלקה אחת עושה הכול</h3>
       <ul>
         <li><code>HttpClient</code> נוצר ומוגדר בתוך מחלקת הבדיקות.</li>
         <li>הבדיקה כותבת את הנתיב <code>"posts/1"</code> בעצמה.</li>
@@ -361,7 +361,7 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
       </ul>
     </div>
     <div class="box">
-      <h3>מתוכנן: שכבות עם אחריות אחת</h3>
+      <h3>אחרי (PR #4): שכבות עם אחריות אחת</h3>
       <ul>
         <li>תצורה במקום אחד: <code>ApiSettings</code>.</li>
         <li>פרטי HTTP במקום אחד: <code>PostsApiClient</code>.</li>
@@ -454,7 +454,7 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
       <span class="tc-id">C-01</span>
       <h3 class="tc-title">ApiSettings: הגדרות הסביבה</h3>
       <span class="tag">Configuration</span>
-      <span class="st plan">מתוכננת</span>
+      <span class="st done">מומשה</span>
       <div class="tc-method">Configuration/ApiSettings.cs</div>
     </div>
     <div class="tc-body">
@@ -483,7 +483,7 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
       <span class="tc-id">C-02</span>
       <h3 class="tc-title">Post ו-CreatePostRequest: מודלי הנתונים</h3>
       <span class="tag">Models</span>
-      <span class="st plan">מתוכננת</span>
+      <span class="st done">מומשה</span>
       <div class="tc-method">Models/Post.cs · Models/CreatePostRequest.cs</div>
     </div>
     <div class="tc-body">
@@ -515,7 +515,7 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
       <span class="tc-id">C-03</span>
       <h3 class="tc-title">ApiClientBase: מחלקת בסיס לכל ה-Clients</h3>
       <span class="tag contract">Clients</span>
-      <span class="st plan">מתוכננת</span>
+      <span class="st done">מומשה</span>
       <div class="tc-method">Clients/ApiClientBase.cs</div>
     </div>
     <div class="tc-body">
@@ -558,7 +558,7 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
       <span class="tc-id">C-04</span>
       <h3 class="tc-title">PostsApiClient: הפעולות על המשאב /posts</h3>
       <span class="tag contract">Clients</span>
-      <span class="st plan">מתוכננת</span>
+      <span class="st done">מומשה</span>
       <div class="tc-method">Clients/PostsApiClient.cs</div>
     </div>
     <div class="tc-body">
@@ -597,7 +597,7 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
       <span class="tc-id">C-05</span>
       <h3 class="tc-title">ApiClientFixture: HttpClient משותף לכל מחלקת בדיקות</h3>
       <span class="tag">Fixtures</span>
-      <span class="st plan">מתוכננת</span>
+      <span class="st done">מומשה</span>
       <div class="tc-method">Fixtures/ApiClientFixture.cs</div>
     </div>
     <div class="tc-body">
@@ -608,7 +608,7 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
         <dt>תלויות</dt><dd><code>ApiSettings</code>, <code>PostsApiClient</code>.</dd>
         <dt>ממשק ציבורי</dt><dd><code>PostsClient</code>, <code>Dispose()</code></dd>
       </dl>
-      <p class="why"><b>איך זה עובד ב-xUnit:</b> מחלקת בדיקות שמממשת <code>IClassFixture&lt;ApiClientFixture&gt;</code> מקבלת את ה-Fixture בבנאי. ‏xUnit יוצר את ה-Fixture פעם אחת לפני הבדיקה הראשונה במחלקה, ומפעיל <code>Dispose</code> אחרי האחרונה. זה מחליף את השדה <code>static readonly HttpClient</code> שיש היום בקוד, ומוסיף שחרור מסודר.</p>
+      <p class="why"><b>איך זה עובד ב-xUnit:</b> מחלקת בדיקות שמממשת <code>IClassFixture&lt;ApiClientFixture&gt;</code> מקבלת את ה-Fixture בבנאי. ‏xUnit יוצר את ה-Fixture פעם אחת לפני הבדיקה הראשונה במחלקה, ומפעיל <code>Dispose</code> אחרי האחרונה. זה החליף את השדה <code>static readonly HttpClient</code> שהיה בקוד המקורי, והוסיף שחרור מסודר.</p>
       <details class="code"><summary>הקוד</summary>
 <pre><code><span class="k">using</span> ApiTests.Clients;
 <span class="k">using</span> ApiTests.Configuration;
@@ -643,7 +643,7 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
       <span class="tc-id">C-06</span>
       <h3 class="tc-title">JsonSchemaValidator: אימות JSON מול סכמה</h3>
       <span class="tag contract">Validation</span>
-      <span class="st plan">מתוכננת</span>
+      <span class="st done">מומשה</span>
       <div class="tc-method">Validation/JsonSchemaValidator.cs · Validation/SchemaValidationResult.cs</div>
     </div>
     <div class="tc-body">
@@ -704,7 +704,7 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
       <span class="tc-id">C-07</span>
       <h3 class="tc-title">PostTestData: נתוני הקלט של הבדיקות</h3>
       <span class="tag">TestData</span>
-      <span class="st plan">מתוכננת</span>
+      <span class="st done">מומשה</span>
       <div class="tc-method">TestData/PostTestData.cs</div>
     </div>
     <div class="tc-body">
@@ -840,7 +840,7 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
         <dt>Assert</dt><dd><code>Assert.Equal(HttpStatusCode.OK, response.StatusCode)</code></dd>
         <dt>בדיקת אמינות</dt><dd>להריץ פעם אחת עם ערך צפוי שגוי (<code>NotFound</code>), ולוודא שהבדיקה נכשלת עם הודעה ברורה שמציגה Expected ו-Actual. מבוצע לפני המיזוג ל-<code>main</code>.</dd>
       </dl>
-      <p class="why"><b>מה משתנה מהקוד הקיים:</b> הבדיקה כבר קיימת, עם <code>client.GetAsync("posts/1")</code>. בגרסה החדשה היא עוברת דרך ה-Client, והמספר 1 מקבל שם. התוצאה הנבדקת לא משתנה.</p>
+      <p class="why"><b>מה השתנה מהגרסה הראשונה:</b> במקור הבדיקה שלחה בעצמה <code>client.GetAsync("posts/1")</code>. ב-PR #4 היא עברה לעבוד דרך ה-Client, והמספר 1 קיבל שם. התוצאה הנבדקת לא השתנתה.</p>
       <details class="code"><summary>הקוד</summary>
 <pre><code>[<span class="t">Fact</span>]
 <span class="k">public async</span> <span class="t">Task</span> GetPost_ReturnsOk()
@@ -861,7 +861,7 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
       <span class="tc-id">TC-02</span>
       <h3 class="tc-title">פוסט מכיל את שדות החובה עם ערכים נכונים</h3>
       <span class="tag">חיובית</span>
-      <span class="st plan">מתוכננת</span>
+      <span class="st done">מומשה</span>
       <div class="tc-method">GetPost_ContainsRequiredFields()</div>
     </div>
     <div class="tc-body">
@@ -901,7 +901,7 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
       <span class="tc-id">TC-03</span>
       <h3 class="tc-title">פוסט תואם לחוזה (JSON Schema)</h3>
       <span class="tag contract">חוזה</span>
-      <span class="st plan">מתוכננת</span>
+      <span class="st done">מומשה</span>
       <div class="tc-method">GetPost_MatchesSchema()</div>
     </div>
     <div class="tc-body">
@@ -940,7 +940,7 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
       <span class="tc-id">TC-04</span>
       <h3 class="tc-title">פוסט בלי שדה חובה נכשל באימות החוזה</h3>
       <span class="tag neg">שלילית</span>
-      <span class="st plan">מתוכננת</span>
+      <span class="st done">מומשה</span>
       <div class="tc-method">PostMissingTitle_FailsSchema()</div>
     </div>
     <div class="tc-body">
@@ -979,7 +979,7 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
       <span class="tc-id">TC-05</span>
       <h3 class="tc-title">יצירת פוסט מחזירה 201 ואת הנתונים שנשלחו</h3>
       <span class="tag">חיובית</span>
-      <span class="st plan">מתוכננת</span>
+      <span class="st done">מומשה</span>
       <div class="tc-method">CreatePost_ReturnsCreated()</div>
     </div>
     <div class="tc-body">
@@ -1022,7 +1022,7 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
       <span class="tc-id">TC-06</span>
       <h3 class="tc-title">קריאת פוסט שלא קיים מחזירה 404</h3>
       <span class="tag neg">שלילית</span>
-      <span class="st opt">הרחבה</span>
+      <span class="st done">מומשה</span>
       <div class="tc-method">GetNonExistingPost_ReturnsNotFound()</div>
     </div>
     <div class="tc-body">
@@ -1147,6 +1147,7 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
       </ul>
     </div>
   </div>
+  <p class="why"><b>מצב נוכחי:</b> כל קריטריוני היציאה מתקיימים. כל ששת מקרי הבדיקה, כולל TC-06, מומשו ועוברים מקומית וב-GitHub Actions. כל אחד מהם נראה נכשל בבדיקת אמינות לפני המיזוג, עם הודעה שמציגה Expected ו-Actual.</p>
 </section>
 
 <!-- 13 -->
@@ -1172,11 +1173,15 @@ footer{margin-top:64px;padding-top:18px;border-top:1px solid var(--line);font-si
   <span class="k">test</span>:
     <span class="k">runs-on</span>: ubuntu-latest
     <span class="k">steps</span>:
-      - <span class="k">uses</span>: actions/checkout@v4
-      - <span class="k">uses</span>: actions/setup-dotnet@v4
+      - <span class="k">uses</span>: actions/checkout@v5
+
+      - <span class="k">uses</span>: actions/setup-dotnet@v5
         <span class="k">with</span>:
           <span class="k">dotnet-version</span>: <span class="s">'10.0.x'</span>
-      - <span class="k">run</span>: dotnet test ApiTests</code></pre>
+
+      - <span class="k">name</span>: Run tests
+        <span class="k">run</span>: dotnet test ApiTests --logger <span class="s">"console;verbosity=normal"</span></code></pre>
+  <p class="why"><b>מה זה נותן בפועל:</b> בכל PR מופיעה הבדיקה <code>tests</code>, עם ✅ או ❌, עוד לפני המיזוג. ה-<code>--logger</code> מדפיס ביומן הריצה את השם והתוצאה של כל בדיקה, כך שכשמשהו נכשל רואים מיד איזו בדיקה נכשלה.</p>
 </section>
 
 <!-- 14 -->
@@ -1230,21 +1235,22 @@ dotnet test ApiTests --logger <span class="s">"console;verbosity=detailed"</span
 <!-- 15 -->
 <section id="roadmap">
   <h2><span class="n">15</span>מפת דרכים למימוש</h2>
-  <p class="section-intro">הסדר שבו הקוד ייכתב. כל שורה היא ענף ו-Pull Request אחד, לפי התהליך בסעיף 13. שמות הענפים לפי מוסכמת הקידומות ב-<code>git-workflow.html</code>: \u200F<code>test/</code> לבדיקה חדשה, ו-<code>feature/</code> להרחבת תשתית. כל ענף נפתח מתוך <code>main</code>. התשתית נבנית קודם, כדי שכל בדיקה חדשה תיכתב מההתחלה בארכיטקטורה הנכונה.</p>
+  <p class="section-intro">הסדר שבו הקוד נכתב. כל שורה היא ענף ו-Pull Request אחד, לפי התהליך בסעיף 13. שמות הענפים לפי מוסכמת הקידומות ב-<code>git-workflow.html</code>: <code>test/</code> לבדיקה חדשה, ו-<code>feature/</code> להרחבת תשתית. כל ענף נפתח מתוך <code>main</code>. התשתית נבנתה קודם, כדי שכל בדיקה חדשה תיכתב מההתחלה בארכיטקטורה הנכונה.</p>
   <div class="table-wrap">
     <table>
       <thead><tr><th>#</th><th class="ltr">ענף</th><th>מה נכנס</th><th>סטטוס</th></tr></thead>
       <tbody>
-        <tr><td class="ltr">1</td><td class="ltr">feature/test-architecture</td><td><code>ApiSettings</code>, המודלים, <code>ApiClientBase</code>, <code>PostsApiClient</code>, <code>ApiClientFixture</code>, ‏<code>PostTestData</code>. העברת TC-01 לתשתית החדשה בלי לשנות את מה שהיא בודקת.</td><td><span class="st plan">מתוכנן</span></td></tr>
-        <tr><td class="ltr">2</td><td class="ltr">test/get-post-fields</td><td>TC-02</td><td><span class="st plan">מתוכנן</span></td></tr>
-        <tr><td class="ltr">3</td><td class="ltr">test/post-schema</td><td><code>Schemas/post.schema.json</code>, ‏<code>JsonSchemaValidator</code>, ‏TC-03 ו-TC-04 יחד, כי TC-04 בודקת את אותו מנגנון</td><td><span class="st plan">מתוכנן</span></td></tr>
-        <tr><td class="ltr">4</td><td class="ltr">test/create-post</td><td>TC-05</td><td><span class="st plan">מתוכנן</span></td></tr>
-        <tr><td class="ltr">5</td><td class="ltr">feature/github-actions-ci</td><td><code>.github/workflows/tests.yml</code></td><td><span class="st plan">מתוכנן</span></td></tr>
-        <tr><td class="ltr">6</td><td class="ltr">test/get-post-not-found</td><td>TC-06</td><td><span class="st opt">הרחבה</span></td></tr>
+        <tr><td class="ltr">1</td><td class="ltr">feature/test-architecture</td><td><code>ApiSettings</code>, המודלים, <code>ApiClientBase</code>, <code>PostsApiClient</code>, <code>ApiClientFixture</code>, ‏<code>PostTestData</code>. העברת TC-01 לתשתית החדשה בלי לשנות את מה שהיא בודקת.</td><td><span class="st done">מוזג, PR #4</span></td></tr>
+        <tr><td class="ltr">2</td><td class="ltr">test/get-post-fields</td><td>TC-02</td><td><span class="st done">מוזג, PR #5</span></td></tr>
+        <tr><td class="ltr">3</td><td class="ltr">test/post-schema</td><td><code>Schemas/post.schema.json</code>, ‏<code>JsonSchemaValidator</code>, ‏TC-03 ו-TC-04 יחד, כי TC-04 בודקת את אותו מנגנון</td><td><span class="st done">מוזג, PR #6</span></td></tr>
+        <tr><td class="ltr">4</td><td class="ltr">test/create-post</td><td>TC-05</td><td><span class="st done">מוזג, PR #7</span></td></tr>
+        <tr><td class="ltr">5</td><td class="ltr">feature/github-actions-ci</td><td><code>.github/workflows/tests.yml</code></td><td><span class="st done">מוזג, PR #8</span></td></tr>
+        <tr><td class="ltr">6</td><td class="ltr">test/get-post-not-found</td><td>TC-06</td><td><span class="st done">מוזג, PR #9</span></td></tr>
       </tbody>
     </table>
   </div>
-  <p class="why"><b>למה refactor קודם:</b> אם TC-02 עד TC-05 ייכתבו בסגנון הנוכחי ורק אחר כך יעברו לשכבות, כל בדיקה תיכתב פעמיים. בנוסף, ה-refactor של TC-01 לבדו מראה שהתשתית עובדת, לפני שמוסיפים עליה בדיקות.</p>
+  <p class="why"><b>למה התשתית קודם:</b> אם TC-02 עד TC-05 היו נכתבות בסגנון הישן ורק אחר כך עוברות לשכבות, כל בדיקה הייתה נכתבת פעמיים. בנוסף, ההעברה של TC-01 לבדה הראתה שהתשתית עובדת, לפני שהוספנו עליה בדיקות. בפועל, ענפים 2, 4 ו-6 שינו קובץ אחד בלבד, כי כל מה שהם צריכים כבר היה קיים.</p>
+  <p class="why"><b>CI על כל PR:</b> מאז ענף 5, כל Pull Request מריץ את הבדיקות ב-GitHub Actions לפני המיזוג. PR #9 היה הראשון שהציג "1 check passed" עוד לפני שמוזג.</p>
 </section>
 
 <!-- 16 -->
@@ -1262,7 +1268,7 @@ dotnet test ApiTests --logger <span class="s">"console;verbosity=detailed"</span
   </ul>
 </section>
 
-<footer>מסמך תכנון בדיקות לפרויקט ApiTests, גרסה 2.0. כל הנתונים בפרויקט ציבוריים או בדויים.</footer>
+<footer>מסמך תכנון בדיקות לפרויקט ApiTests, גרסה 2.1. כל הנתונים בפרויקט ציבוריים או בדויים.</footer>
 </main>
 </div>
 </body>
