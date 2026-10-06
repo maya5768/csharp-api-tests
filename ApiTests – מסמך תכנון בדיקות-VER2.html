@@ -1230,16 +1230,16 @@ dotnet test ApiTests --logger <span class="s">"console;verbosity=detailed"</span
 <!-- 15 -->
 <section id="roadmap">
   <h2><span class="n">15</span>מפת דרכים למימוש</h2>
-  <p class="section-intro">הסדר שבו הקוד ייכתב. כל שורה היא ענף ו-Pull Request אחד, לפי התהליך בסעיף 13. התשתית נבנית קודם, כדי שכל בדיקה חדשה תיכתב מההתחלה בארכיטקטורה הנכונה.</p>
+  <p class="section-intro">הסדר שבו הקוד ייכתב. כל שורה היא ענף ו-Pull Request אחד, לפי התהליך בסעיף 13. שמות הענפים לפי מוסכמת הקידומות ב-<code>git-workflow.html</code>: \u200F<code>test/</code> לבדיקה חדשה, ו-<code>feature/</code> להרחבת תשתית. כל ענף נפתח מתוך <code>main</code>. התשתית נבנית קודם, כדי שכל בדיקה חדשה תיכתב מההתחלה בארכיטקטורה הנכונה.</p>
   <div class="table-wrap">
     <table>
       <thead><tr><th>#</th><th class="ltr">ענף</th><th>מה נכנס</th><th>סטטוס</th></tr></thead>
       <tbody>
-        <tr><td class="ltr">1</td><td class="ltr">refactor/test-architecture</td><td><code>ApiSettings</code>, המודלים, <code>ApiClientBase</code>, <code>PostsApiClient</code>, <code>ApiClientFixture</code>, ‏<code>PostTestData</code>. העברת TC-01 לתשתית החדשה בלי לשנות את מה שהיא בודקת.</td><td><span class="st plan">מתוכנן</span></td></tr>
+        <tr><td class="ltr">1</td><td class="ltr">feature/test-architecture</td><td><code>ApiSettings</code>, המודלים, <code>ApiClientBase</code>, <code>PostsApiClient</code>, <code>ApiClientFixture</code>, ‏<code>PostTestData</code>. העברת TC-01 לתשתית החדשה בלי לשנות את מה שהיא בודקת.</td><td><span class="st plan">מתוכנן</span></td></tr>
         <tr><td class="ltr">2</td><td class="ltr">test/get-post-fields</td><td>TC-02</td><td><span class="st plan">מתוכנן</span></td></tr>
         <tr><td class="ltr">3</td><td class="ltr">test/post-schema</td><td><code>Schemas/post.schema.json</code>, ‏<code>JsonSchemaValidator</code>, ‏TC-03 ו-TC-04 יחד, כי TC-04 בודקת את אותו מנגנון</td><td><span class="st plan">מתוכנן</span></td></tr>
         <tr><td class="ltr">4</td><td class="ltr">test/create-post</td><td>TC-05</td><td><span class="st plan">מתוכנן</span></td></tr>
-        <tr><td class="ltr">5</td><td class="ltr">ci/github-actions</td><td><code>.github/workflows/tests.yml</code></td><td><span class="st plan">מתוכנן</span></td></tr>
+        <tr><td class="ltr">5</td><td class="ltr">feature/github-actions-ci</td><td><code>.github/workflows/tests.yml</code></td><td><span class="st plan">מתוכנן</span></td></tr>
         <tr><td class="ltr">6</td><td class="ltr">test/get-post-not-found</td><td>TC-06</td><td><span class="st opt">הרחבה</span></td></tr>
       </tbody>
     </table>
